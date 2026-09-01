@@ -114,6 +114,10 @@
     .close-btn{border:1px solid var(--line);background:white;width:42px;height:42px;border-radius:14px}
 
 
+    .guest-module{display:flex;justify-content:space-between;align-items:center;gap:18px;background:rgba(247,242,238,.7);border-radius:18px;padding:16px}
+    .guest-module strong{display:block;font-size:16px;margin:6px 0}
+    .guest-module p{margin:0;color:var(--text);font-size:12px;line-height:1.5}
+    .guest-module .project-actions{margin-top:0;flex:0 0 auto}
     .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .info-card{background:rgba(247,242,238,.7);border-radius:18px;padding:16px}
     .info-card strong{display:block;font-size:16px;margin:6px 0}
@@ -136,7 +140,7 @@
     @media(max-width:640px){
       .toolbar{grid-template-columns:1fr}
       .project-top{flex-direction:column}
-      .project-finance,.fields,.detail-grid,.info-grid,.summary-grid{grid-template-columns:1fr}
+      .project-finance,.fields,.detail-grid,.info-grid,.summary-grid{grid-template-columns:1fr}.guest-module{flex-direction:column;align-items:stretch}.guest-module .project-actions{margin-top:10px}
       .panel.full,.summary-item.wide{grid-column:auto}
       .stats{grid-template-columns:1fr 1fr}
       .modal-backdrop{padding:0;align-items:end}
@@ -347,6 +351,18 @@
           </section>
 
           <section class="panel full">
+            <h3>Invitados</h3>
+            <div class="guest-module">
+              <div>
+                <span class="info-kicker">Base individual del evento</span>
+                <strong id="guestSheetStatus">Todavía no preparada</strong>
+                <p id="guestSheetHelp">CELEA creará un Google Sheet exclusivo para los invitados de este proyecto.</p>
+              </div>
+              <div class="project-actions" id="guestSheetActions"></div>
+            </div>
+          </section>
+
+          <section class="panel full">
             <h3>Archivos</h3>
             <div class="project-actions" id="detailLinks"></div>
           </section>
@@ -551,6 +567,18 @@
       if(p.urlRevision)links.push(`<a class="action-link secondary" href="${escapeAttr(p.urlRevision)}" target="_blank">Abrir revisión</a>`);
       if(p.urlFinal)links.push(`<a class="action-link secondary" href="${escapeAttr(p.urlFinal)}" target="_blank">Abrir invitación final</a>`);
       $("detailLinks").innerHTML=links.length?links.join(""):"<span class='read-value'>Todavía no hay enlaces disponibles.</span>";
+
+      if(p.invitadosSheetUrl){
+        $("guestSheetStatus").textContent="Base de invitados preparada ✓";
+        $("guestSheetHelp").textContent="Este proyecto ya tiene su Google Sheet individual.";
+        $("guestSheetActions").innerHTML=`<a class="action-link" href="${escapeAttr(p.invitadosSheetUrl)}" target="_blank" rel="noopener">Abrir lista de invitados</a>`;
+      }else{
+        $("guestSheetStatus").textContent="Todavía no preparada";
+        $("guestSheetHelp").textContent="CELEA creará un Google Sheet exclusivo para los invitados de este proyecto.";
+        $("guestSheetActions").innerHTML=`<button class="action-btn open-btn" id="prepareGuestsBtn" type="button">Preparar invitados</button>`;
+        $("prepareGuestsBtn").onclick=prepararInvitados;
+      }
+
       recalcularSaldoVista();
     }
 
@@ -562,6 +590,42 @@
       const anticipo=Number($("editAnticipo").value)||0;
       const final=Number($("editPagoFinal").value)||0;
       $("editSaldo").value=Math.max(0,total-anticipo-final).toFixed(2);
+    }
+
+    async function prepararInvitados(){
+      if(!proyectoActual)return;
+      const token=obtenerToken();
+      if(!token)return mostrarLogin();
+
+      const btn=$("prepareGuestsBtn");
+      if(btn){btn.disabled=true;btn.textContent="Preparando…";}
+
+      try{
+        const data=await jsonp({
+          accion:"admin_preparar_invitados",
+          token,
+          id:proyectoActual.id
+        });
+
+        if(!data.ok)throw new Error(data.mensaje||"No se pudo preparar la base de invitados.");
+
+        toast(data.yaExistia?"La base ya estaba creada":"Base de invitados creada ✓");
+
+        const detalle=await jsonp({
+          accion:"admin_detalle",
+          token,
+          id:proyectoActual.id
+        });
+
+        if(detalle.ok){
+          proyectoActual=detalle.proyecto;
+          eventoActual=detalle.evento||{};
+          llenarModal(proyectoActual,eventoActual);
+        }
+      }catch(e){
+        toast(e.message||"No se pudo preparar invitados.");
+        if(btn){btn.disabled=false;btn.textContent="Preparar invitados";}
+      }
     }
 
     async function guardarProyecto(){
