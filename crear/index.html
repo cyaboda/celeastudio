@@ -494,24 +494,28 @@
               </div>
             </div>
 
-            <div class="field">
-              <label for="nombreRecepcion">Lugar de recepción</label>
-              <input id="nombreRecepcion" name="nombreRecepcion" type="text">
-            </div>
+            <div id="datosRecepcion" class="full" style="display:none;">
+              <div class="grid">
+                <div class="field">
+                  <label for="nombreRecepcion">Lugar de recepción</label>
+                  <input id="nombreRecepcion" name="nombreRecepcion" type="text">
+                </div>
 
-            <div class="field">
-              <label for="horaRecepcion">Hora de recepción</label>
-              <input id="horaRecepcion" name="horaRecepcion" type="time">
-            </div>
+                <div class="field">
+                  <label for="horaRecepcion">Hora de recepción</label>
+                  <input id="horaRecepcion" name="horaRecepcion" type="time">
+                </div>
 
-            <div class="field full">
-              <label for="direccionRecepcion">Dirección de recepción</label>
-              <input id="direccionRecepcion" name="direccionRecepcion" type="text">
-            </div>
+                <div class="field full">
+                  <label for="direccionRecepcion">Dirección de recepción</label>
+                  <input id="direccionRecepcion" name="direccionRecepcion" type="text">
+                </div>
 
-            <div class="field full">
-              <label for="mapsRecepcion">Enlace de Google Maps de recepción</label>
-              <input id="mapsRecepcion" name="mapsRecepcion" type="url" placeholder="https://maps.app.goo.gl/...">
+                <div class="field full">
+                  <label for="mapsRecepcion">Enlace de Google Maps de recepción</label>
+                  <input id="mapsRecepcion" name="mapsRecepcion" type="url" placeholder="https://maps.app.goo.gl/...">
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -759,6 +763,30 @@
   <script>
     const CELEA_API_URL = "https://script.google.com/macros/s/AKfycbzu42ewgHPaFYryJMtRK_L2_iphOU6r0Mml7A3UCe7_elkqy7oWnmv6B5caJDuD9lA6/exec";
 
+    // Recepción inteligente: solo pedir datos adicionales cuando es otro lugar.
+    const mismoSi = document.getElementById("mismoSi");
+    const mismoNo = document.getElementById("mismoNo");
+    const datosRecepcion = document.getElementById("datosRecepcion");
+    const camposRecepcion = ["nombreRecepcion","horaRecepcion","direccionRecepcion","mapsRecepcion"];
+
+    function actualizarRecepcion(){
+      if(mismoNo.checked){
+        datosRecepcion.style.display = "block";
+      }else{
+        datosRecepcion.style.display = "none";
+        if(mismoSi.checked){
+          camposRecepcion.forEach(id => {
+            const campo = document.getElementById(id);
+            if(campo) campo.value = "";
+          });
+        }
+      }
+    }
+
+    mismoSi.addEventListener("change", actualizarRecepcion);
+    mismoNo.addEventListener("change", actualizarRecepcion);
+    actualizarRecepcion();
+
     const form = document.getElementById("celeaForm");
     const steps = [...document.querySelectorAll(".step")];
     const progressBar = document.getElementById("progressBar");
@@ -894,6 +922,16 @@
           datos[nombre] = field.value || "";
         }
       });
+
+      // Si ceremonia y recepción son en el mismo lugar, reutilizamos esos datos
+      // internamente para que Google Sheets quede completo sin pedírselos dos veces.
+      if(datos.mismoLugar === "Sí"){
+        datos.nombreRecepcion = datos.nombreCeremonia || "";
+        datos.direccionRecepcion = datos.direccionCeremonia || "";
+        datos.mapsRecepcion = datos.mapsCeremonia || "";
+        // La hora de recepción puede ser distinta, por eso no inventamos una hora.
+        datos.horaRecepcion = "";
+      }
 
       /*
         IMPORTANTE:
