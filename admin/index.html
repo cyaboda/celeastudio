@@ -569,9 +569,16 @@
       $("detailLinks").innerHTML=links.length?links.join(""):"<span class='read-value'>Todavía no hay enlaces disponibles.</span>";
 
       if(p.invitadosSheetUrl){
-        $("guestSheetStatus").textContent="Base de invitados preparada ✓";
-        $("guestSheetHelp").textContent="Este proyecto ya tiene su Google Sheet individual.";
-        $("guestSheetActions").innerHTML=`<a class="action-link" href="${escapeAttr(p.invitadosSheetUrl)}" target="_blank" rel="noopener">Abrir lista de invitados</a>`;
+        $("guestSheetStatus").textContent=p.invitadosImportados
+          ? `${p.invitadosImportados} invitaciones importadas ✓`
+          : "Base de invitados preparada ✓";
+        $("guestSheetHelp").textContent=p.invitadosArchivo
+          ? `Último archivo importado: ${p.invitadosArchivo}`
+          : "La base está lista. Ahora puedes importar el Excel o CSV recibido del cliente.";
+        $("guestSheetActions").innerHTML=`
+          <a class="action-link" href="${escapeAttr(p.invitadosSheetUrl)}" target="_blank" rel="noopener">Abrir lista</a>
+          <button class="action-btn open-btn" id="importGuestsBtn" type="button">Importar archivo</button>`;
+        $("importGuestsBtn").onclick=importarInvitados;
       }else{
         $("guestSheetStatus").textContent="Todavía no preparada";
         $("guestSheetHelp").textContent="CELEA creará un Google Sheet exclusivo para los invitados de este proyecto.";
@@ -590,6 +597,42 @@
       const anticipo=Number($("editAnticipo").value)||0;
       const final=Number($("editPagoFinal").value)||0;
       $("editSaldo").value=Math.max(0,total-anticipo-final).toFixed(2);
+    }
+
+    async function importarInvitados(){
+      if(!proyectoActual)return;
+      const token=obtenerToken();
+      if(!token)return mostrarLogin();
+
+      const btn=$("importGuestsBtn");
+      if(btn){btn.disabled=true;btn.textContent="Importando…";}
+
+      try{
+        const data=await jsonp({
+          accion:"admin_importar_invitados",
+          token,
+          id:proyectoActual.id
+        });
+
+        if(!data.ok)throw new Error(data.mensaje||"No se pudo importar el archivo.");
+
+        toast(`${data.importados} invitaciones importadas ✓`);
+
+        const detalle=await jsonp({
+          accion:"admin_detalle",
+          token,
+          id:proyectoActual.id
+        });
+
+        if(detalle.ok){
+          proyectoActual=detalle.proyecto;
+          eventoActual=detalle.evento||{};
+          llenarModal(proyectoActual,eventoActual);
+        }
+      }catch(e){
+        toast(e.message||"No se pudo importar.");
+        if(btn){btn.disabled=false;btn.textContent="Importar archivo";}
+      }
     }
 
     async function prepararInvitados(){
