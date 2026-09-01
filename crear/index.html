@@ -900,6 +900,64 @@
       });
     }
 
+
+    async function comprimirFotoParaEnvio(file){
+      if(file.size <= 2.5 * 1024 * 1024){
+        return await archivoABase64(file);
+      }
+
+      if(!/^image\/(jpeg|jpg|png|webp)$/i.test(file.type || "")){
+        throw new Error(
+          'La foto "' + file.name + '" pesa demasiado y su formato no puede comprimirse automáticamente. ' +
+          'Convierte la imagen a JPG o PNG e inténtalo nuevamente.'
+        );
+      }
+
+      const url = URL.createObjectURL(file);
+
+      try{
+        const img = await new Promise((resolve,reject)=>{
+          const i = new Image();
+          i.onload = ()=>resolve(i);
+          i.onerror = ()=>reject(new Error('No pude leer la foto "' + file.name + '".'));
+          i.src = url;
+        });
+
+        const maxSide = 1800;
+        const scale = Math.min(
+          1,
+          maxSide / Math.max(img.naturalWidth, img.naturalHeight)
+        );
+
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
+        canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+
+        const blob = await new Promise(resolve=>{
+          canvas.toBlob(resolve,"image/jpeg",0.84);
+        });
+
+        if(!blob){
+          throw new Error('No pude optimizar la foto "' + file.name + '".');
+        }
+
+        const nombre = file.name.replace(/\.[^.]+$/,"") + ".jpg";
+        const optimizada = new File(
+          [blob],
+          nombre,
+          {type:"image/jpeg"}
+        );
+
+        return await archivoABase64(optimizada);
+
+      }finally{
+        URL.revokeObjectURL(url);
+      }
+    }
+
     async function prepararArchivos(){
       const resultado = {
         fotos: [],
@@ -920,15 +978,9 @@
         }
 
         for(const foto of archivosFotos){
-          // Máximo 4 MB por foto
-          if(foto.size > 4 * 1024 * 1024){
-            throw new Error(
-              "La foto \"" + foto.name + "\" pesa más de 4 MB. Reduce su tamaño e inténtalo nuevamente."
-            );
-          }
-
+          // CELEA optimiza automáticamente las fotografías pesadas.
           resultado.fotos.push(
-            await archivoABase64(foto)
+            await comprimirFotoParaEnvio(foto)
           );
         }
       }
@@ -1010,15 +1062,14 @@
         datos.horaRecepcion = "";
       }
 
-      // Convertimos los archivos seleccionados para enviarlos a Apps Script.
-      // El backend los guardará en las carpetas del proyecto en Google Drive.
-      datos.archivos = await prepararArchivos();
-
       nextBtn.disabled = true;
       prevBtn.disabled = true;
-      nextBtn.textContent = "Enviando información y archivos...";
+      nextBtn.textContent = "Preparando archivos...";
 
       try{
+        // Convertimos y optimizamos los archivos antes de enviarlos.
+        datos.archivos = await prepararArchivos();
+        nextBtn.textContent = "Enviando información y archivos...";
         /*
           Apps Script suele bloquear la lectura de la respuesta desde GitHub Pages
           por políticas CORS. Por eso usamos no-cors: el envío sí llega al script,
@@ -1047,7 +1098,11 @@
 
       }catch(error){
         console.error(error);
-        alert("No pudimos enviar la información. Revisa tu conexión e inténtalo nuevamente.");
+        alert(
+          error && error.message
+            ? error.message
+            : "No pudimos enviar la información. Revisa tu conexión e inténtalo nuevamente."
+        );
         nextBtn.disabled = false;
         prevBtn.disabled = false;
         nextBtn.textContent = "Enviar información";
