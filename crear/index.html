@@ -752,7 +752,7 @@
         <div class="success-icon">✓</div>
         <h2>¡Recibimos tu historia! ♡</h2>
         <p>
-          Tu información fue enviada correctamente a CELEA Studio. Nos pondremos en contacto contigo para continuar con tu invitación.
+          Tu información y archivos fueron enviados correctamente a CELEA Studio. Nos pondremos en contacto contigo para continuar con tu invitación.
         </p>
         <p id="projectStatus" style="margin-top:12px;font-weight:600;"></p>
         <a href="../" class="btn btn-primary">Volver a CELEA Studio</a>
@@ -874,6 +874,83 @@
       `).join("");
     }
 
+
+    function archivoABase64(file){
+      return new Promise((resolve, reject)=>{
+        const reader = new FileReader();
+
+        reader.onload = ()=>{
+          const resultado = String(reader.result || "");
+          const base64 = resultado.includes(",")
+            ? resultado.split(",")[1]
+            : resultado;
+
+          resolve({
+            nombre: file.name,
+            mimeType: file.type || "application/octet-stream",
+            base64: base64
+          });
+        };
+
+        reader.onerror = ()=>{
+          reject(new Error("No se pudo leer el archivo: " + file.name));
+        };
+
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function prepararArchivos(){
+      const resultado = {
+        fotos: [],
+        listaInvitados: null
+      };
+
+      const inputFotos = document.getElementById("fotos");
+      const inputInvitados = document.getElementById("listaInvitados");
+
+      // Fotos
+      if(inputFotos && inputFotos.files && inputFotos.files.length){
+        const archivosFotos = Array.from(inputFotos.files);
+
+        // Límite prudente para Apps Script
+        const maxFotos = 12;
+        if(archivosFotos.length > maxFotos){
+          throw new Error("Puedes subir hasta " + maxFotos + " fotos por envío.");
+        }
+
+        for(const foto of archivosFotos){
+          // Máximo 4 MB por foto
+          if(foto.size > 4 * 1024 * 1024){
+            throw new Error(
+              "La foto \"" + foto.name + "\" pesa más de 4 MB. Reduce su tamaño e inténtalo nuevamente."
+            );
+          }
+
+          resultado.fotos.push(
+            await archivoABase64(foto)
+          );
+        }
+      }
+
+      // Lista de invitados
+      if(inputInvitados && inputInvitados.files && inputInvitados.files[0]){
+        const archivo = inputInvitados.files[0];
+
+        // Máximo 5 MB para lista
+        if(archivo.size > 5 * 1024 * 1024){
+          throw new Error(
+            "La lista de invitados pesa más de 5 MB. Reduce su tamaño e inténtalo nuevamente."
+          );
+        }
+
+        resultado.listaInvitados =
+          await archivoABase64(archivo);
+      }
+
+      return resultado;
+    }
+
     async function enviarFormulario(){
       const datos = {};
 
@@ -933,15 +1010,13 @@
         datos.horaRecepcion = "";
       }
 
-      /*
-        IMPORTANTE:
-        Los campos de archivos (fotos y lista de invitados) todavía NO se suben.
-        Los conectaremos después con Google Drive.
-      */
+      // Convertimos los archivos seleccionados para enviarlos a Apps Script.
+      // El backend los guardará en las carpetas del proyecto en Google Drive.
+      datos.archivos = await prepararArchivos();
 
       nextBtn.disabled = true;
       prevBtn.disabled = true;
-      nextBtn.textContent = "Enviando...";
+      nextBtn.textContent = "Enviando información y archivos...";
 
       try{
         /*
@@ -964,7 +1039,7 @@
 
         const projectStatus = document.getElementById("projectStatus");
         if(projectStatus){
-          projectStatus.textContent = "Tu solicitud ya está siendo procesada por CELEA.";
+          projectStatus.textContent = "Tu solicitud y archivos ya están siendo procesados por CELEA.";
         }
 
         success.classList.add("active");
