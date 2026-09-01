@@ -727,7 +727,7 @@
           <div class="step-head">
             <div class="step-num">Paso 08</div>
             <h2>Revisemos todo.</h2>
-            <p>Esta es una vista resumida de la información principal. Después conectaremos este envío directamente con la base de CELEA.</p>
+            <p>Esta es una vista resumida de la información principal. Al enviar, los datos se registrarán directamente en el sistema de CELEA.</p>
           </div>
 
           <div class="summary" id="summary"></div>
@@ -748,14 +748,17 @@
         <div class="success-icon">✓</div>
         <h2>¡Recibimos tu historia! ♡</h2>
         <p>
-          Esta versión todavía es una demostración visual y no ha enviado datos a Google Sheets. En el siguiente paso conectaremos el formulario con el sistema de CELEA.
+          Tu información fue enviada correctamente a CELEA Studio. Nos pondremos en contacto contigo para continuar con tu invitación.
         </p>
+        <p id="projectStatus" style="margin-top:12px;font-weight:600;"></p>
         <a href="../" class="btn btn-primary">Volver a CELEA Studio</a>
       </div>
     </div>
   </div>
 
   <script>
+    const CELEA_API_URL = "https://script.google.com/macros/s/AKfycbzu42ewgHPaFYryJMtRK_L2_iphOU6r0Mml7A3UCe7_elkqy7oWnmv6B5caJDuD9lA6/exec";
+
     const form = document.getElementById("celeaForm");
     const steps = [...document.querySelectorAll(".step")];
     const progressBar = document.getElementById("progressBar");
@@ -843,7 +846,102 @@
       `).join("");
     }
 
-    nextBtn.addEventListener("click",()=>{
+    async function enviarFormulario(){
+      const datos = {};
+
+      const campos = [
+        "nombres",
+        "tipoEvento",
+        "fechaEvento",
+        "whatsapp",
+        "email",
+        "nombreCeremonia",
+        "horaCeremonia",
+        "direccionCeremonia",
+        "mapsCeremonia",
+        "mismoLugar",
+        "nombreRecepcion",
+        "horaRecepcion",
+        "direccionRecepcion",
+        "mapsRecepcion",
+        "plan",
+        "estilo",
+        "paleta",
+        "frase",
+        "dressCode",
+        "coloresReservados",
+        "musica",
+        "historia",
+        "regalos",
+        "mensajeRegalos",
+        "datosRegalos",
+        "fechaLimite",
+        "preguntaExtra",
+        "acompanantes",
+        "instruccionesRsvp",
+        "politicaNinos",
+        "infoAdicional",
+        "mensajeFinal"
+      ];
+
+      campos.forEach(nombre => {
+        const field = form.elements[nombre];
+        if(!field) return;
+
+        if(field instanceof RadioNodeList){
+          datos[nombre] = field.value || "";
+        }else{
+          datos[nombre] = field.value || "";
+        }
+      });
+
+      /*
+        IMPORTANTE:
+        Los campos de archivos (fotos y lista de invitados) todavía NO se suben.
+        Los conectaremos después con Google Drive.
+      */
+
+      nextBtn.disabled = true;
+      prevBtn.disabled = true;
+      nextBtn.textContent = "Enviando...";
+
+      try{
+        /*
+          Apps Script suele bloquear la lectura de la respuesta desde GitHub Pages
+          por políticas CORS. Por eso usamos no-cors: el envío sí llega al script,
+          aunque el navegador no pueda leer el JSON devuelto.
+        */
+        await fetch(CELEA_API_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(datos)
+        });
+
+        form.style.display = "none";
+        navActions.style.display = "none";
+        document.querySelector(".progress-wrap").style.display = "none";
+
+        const projectStatus = document.getElementById("projectStatus");
+        if(projectStatus){
+          projectStatus.textContent = "Tu solicitud ya está siendo procesada por CELEA.";
+        }
+
+        success.classList.add("active");
+        window.scrollTo({top:0,behavior:"smooth"});
+
+      }catch(error){
+        console.error(error);
+        alert("No pudimos enviar la información. Revisa tu conexión e inténtalo nuevamente.");
+        nextBtn.disabled = false;
+        prevBtn.disabled = false;
+        nextBtn.textContent = "Enviar información";
+      }
+    }
+
+    nextBtn.addEventListener("click",async ()=>{
       if(current < steps.length - 1){
         if(!validateCurrent()) return;
         current++;
@@ -854,11 +952,7 @@
           return;
         }
 
-        form.style.display = "none";
-        navActions.style.display = "none";
-        document.querySelector(".progress-wrap").style.display = "none";
-        success.classList.add("active");
-        window.scrollTo({top:0,behavior:"smooth"});
+        await enviarFormulario();
       }
     });
 
