@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f7f0ea" />
+  <title>Crear mi invitación | CELEA Studio</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Italiana&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --cream:#f8f2ec;
+      --paper:#fffdf9;
+      --sage:#8c9983;
+      --sage-dark:#56624f;
+      --sage-soft:#dce5d7;
+      --rose:#cf988e;
+      --rose-dark:#a86f66;
+      --rose-soft:#efd9d4;
+      --ink:#2e322f;
+      --muted:#77716c;
+      --line:rgba(46,50,47,.12);
+      --shadow:0 24px 70px rgba(75,59,50,.10);
+      --radius:24px;
+      --max:980px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:"DM Sans",system-ui,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 10% 5%,rgba(207,152,142,.10),transparent 24%),
+        radial-gradient(circle at 90% 10%,rgba(140,153,131,.10),transparent 24%),
+        var(--cream);
+      min-height:100vh;
+    }
+
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    a{text-decoration:none;color:inherit}
+
+    .shell{
+      width:min(calc(100% - 28px),var(--max));
+      margin:auto;
+      padding:28px 0 70px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+      margin-bottom:24px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .brand-mark{width:46px;height:46px}
+    .brand-word{
+      font-family:"Italiana",serif;
+      font-size:1.8rem;
+      letter-spacing:.12em;
+      line-height:1;
+    }
+    .brand-studio{
+      display:block;
+      font-size:.48rem;
+      letter-spacing:.36em;
+      color:var(--rose-dark);
+      text-align:center;
+      margin-top:6px;
+      font-weight:600;
+    }
+
+    .back-link{
+      color:var(--muted);
+      font-size:.88rem;
+    }
+
+    .hero{
+      text-align:center;
+      padding:26px 10px 22px;
+    }
+    .eyebrow{
+      text-transform:uppercase;
+      letter-spacing:.22em;
+      font-size:.72rem;
+      color:var(--rose-dark);
+      font-weight:600;
+    }
+    .hero h1{
+      font-family:"Italiana",serif;
+      font-size:clamp(2.9rem,6vw,5rem);
+      font-weight:400;
+      line-height:1;
+      margin:10px 0 14px;
+    }
+    .hero p{
+      color:var(--muted);
+      max-width:680px;
+      margin:0 auto;
+    }
+
+    .progress-wrap{
+      margin:24px 0 28px;
+    }
+    .progress-meta{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      color:var(--muted);
+      font-size:.82rem;
+      margin-bottom:9px;
+    }
+    .progress{
+      width:100%;
+      height:8px;
+      border-radius:999px;
+      background:rgba(46,50,47,.08);
+      overflow:hidden;
+    }
+    .progress-bar{
+      height:100%;
+      width:12.5%;
+      background:linear-gradient(90deg,var(--sage),var(--rose));
+      border-radius:999px;
+      transition:width .35s ease;
+    }
+
+    .card{
+      background:rgba(255,253,249,.88);
+      border:1px solid var(--line);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .step{
+      display:none;
+      padding:34px;
+      animation:fade .35s ease;
+    }
+    .step.active{display:block}
+    @keyframes fade{
+      from{opacity:0;transform:translateY(8px)}
+      to{opacity:1;transform:none}
+    }
+
+    .step-head{
+      margin-bottom:26px;
+    }
+    .step-num{
+      color:var(--rose-dark);
+      font-size:.72rem;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      font-weight:600;
+    }
+    .step h2{
+      font-family:"Italiana",serif;
+      font-size:2.35rem;
+      font-weight:400;
+      margin:6px 0 8px;
+      line-height:1.05;
+    }
+    .step-head p{
+      color:var(--muted);
+      margin:0;
+      max-width:720px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+    .full{grid-column:1/-1}
+
+    .field label{
+      display:block;
+      font-size:.82rem;
+      font-weight:600;
+      margin-bottom:8px;
+    }
+    .hint{
+      display:block;
+      color:var(--muted);
+      font-size:.72rem;
+      margin-top:6px;
+    }
+
+    input,select,textarea{
+      width:100%;
+      border:1px solid rgba(46,50,47,.14);
+      border-radius:14px;
+      background:rgba(255,255,255,.8);
+      padding:14px 15px;
+      color:var(--ink);
+      outline:none;
+      transition:.2s ease;
+    }
+    input:focus,select:focus,textarea:focus{
+      border-color:rgba(168,111,102,.55);
+      box-shadow:0 0 0 4px rgba(207,152,142,.10);
+      background:white;
+    }
+    textarea{min-height:120px;resize:vertical}
+
+    .choice-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+    }
+    .choice{
+      position:relative;
+    }
+    .choice input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+    .choice label{
+      display:block;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:16px;
+      min-height:104px;
+      background:rgba(255,255,255,.62);
+      cursor:pointer;
+      transition:.2s ease;
+    }
+    .choice label strong{
+      display:block;
+      margin-bottom:5px;
+    }
+    .choice label span{
+      color:var(--muted);
+      font-size:.78rem;
+    }
+    .choice input:checked + label{
+      border-color:var(--rose);
+      background:rgba(239,217,212,.42);
+      box-shadow:0 8px 24px rgba(168,111,102,.08);
+    }
+
+    .upload{
+      border:1.5px dashed rgba(86,98,79,.30);
+      border-radius:18px;
+      padding:24px;
+      text-align:center;
+      background:rgba(220,229,215,.20);
+    }
+    .upload input{
+      border:none;
+      background:transparent;
+      padding:8px 0 0;
+    }
+    .upload strong{display:block;margin-bottom:4px}
+    .upload span{font-size:.78rem;color:var(--muted)}
+
+    .summary{
+      display:grid;
+      gap:12px;
+    }
+    .summary-row{
+      display:grid;
+      grid-template-columns:190px 1fr;
+      gap:16px;
+      padding:14px 0;
+      border-bottom:1px solid var(--line);
+    }
+    .summary-row b{font-size:.8rem}
+    .summary-row span{color:var(--muted);font-size:.88rem}
+
+    .consent{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      margin-top:18px;
+      color:var(--muted);
+      font-size:.8rem;
+    }
+    .consent input{
+      width:auto;
+      margin-top:3px;
+    }
+
+    .nav-actions{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:22px 34px 28px;
+      border-top:1px solid var(--line);
+      background:rgba(255,253,249,.64);
+    }
+
+    .btn{
+      border:none;
+      border-radius:999px;
+      padding:13px 22px;
+      font-weight:600;
+      transition:.2s ease;
+    }
+    .btn-secondary{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid var(--line);
+    }
+    .btn-primary{
+      background:var(--ink);
+      color:white;
+    }
+    .btn-primary:hover{transform:translateY(-1px)}
+    .btn[disabled]{opacity:.4;cursor:not-allowed;transform:none}
+
+    .success{
+      display:none;
+      text-align:center;
+      padding:60px 34px;
+    }
+    .success.active{display:block}
+    .success-icon{
+      width:64px;height:64px;border-radius:50%;
+      margin:0 auto 20px;
+      background:var(--sage-soft);
+      display:grid;place-items:center;
+      color:var(--sage-dark);
+      font-size:1.6rem;
+    }
+    .success h2{
+      font-family:"Italiana",serif;
+      font-size:2.8rem;
+      font-weight:400;
+      margin:0 0 12px;
+    }
+    .success p{
+      color:var(--muted);
+      max-width:560px;
+      margin:0 auto 24px;
+    }
+
+    @media(max-width:720px){
+      .shell{width:min(calc(100% - 20px),var(--max));padding-top:18px}
+      .topbar{align-items:flex-start}
+      .brand-mark{width:38px;height:38px}
+      .brand-word{font-size:1.45rem}
+      .back-link{font-size:.76rem}
+      .hero{padding:18px 4px 16px}
+      .hero h1{font-size:3.2rem}
+      .step{padding:24px 18px}
+      .grid,.choice-grid{grid-template-columns:1fr}
+      .nav-actions{padding:18px;flex-direction:column-reverse}
+      .nav-actions .btn{width:100%}
+      .summary-row{grid-template-columns:1fr;gap:4px}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <a class="brand" href="../">
+        <svg class="brand-mark" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+          <path d="M74 18C60 7 38 9 24 23C8 39 9 65 27 79C40 89 59 88 74 77" stroke="#cf988e" stroke-width="5.6" stroke-linecap="round"/>
+          <path d="M28 72C42 66 49 52 52 33" stroke="#8c9983" stroke-width="3" stroke-linecap="round"/>
+          <path d="M44 53C34 49 27 43 22 36C32 36 40 40 44 53Z" fill="#8c9983"/>
+          <path d="M51 43C55 31 64 24 74 20C71 31 64 39 51 43Z" fill="#8c9983"/>
+          <path d="M49 64C56 54 64 49 73 48C69 58 61 64 49 64Z" fill="#9eaa95"/>
+          <circle cx="79" cy="43" r="3.6" fill="#cf988e"/>
+          <circle cx="79" cy="54" r="3.6" fill="#cf988e"/>
+        </svg>
+        <span>
+          <span class="brand-word">CELEA</span>
+          <span class="brand-studio">STUDIO</span>
+        </span>
+      </a>
+
+      <a href="../" class="back-link">← Volver al inicio</a>
+    </div>
+
+    <section class="hero">
+      <div class="eyebrow">Comencemos tu historia</div>
+      <h1>Crear mi invitación</h1>
+      <p>Cuéntanos los detalles de tu evento. Puedes avanzar paso a paso y revisar toda la información antes de enviarla.</p>
+    </section>
+
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="progressText">Paso 1 de 8 · Tu evento</span>
+        <span id="progressPercent">13%</span>
+      </div>
+      <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <form id="celeaForm" novalidate>
+
+        <section class="step active" data-step="1" data-title="Tu evento">
+          <div class="step-head">
+            <div class="step-num">Paso 01</div>
+            <h2>Cuéntanos sobre tu evento.</h2>
+            <p>Empecemos por lo esencial: quiénes son, qué celebran y cuándo será.</p>
+          </div>
+
+          <div class="grid">
+            <div class="field full">
+              <label for="nombres">Nombres que aparecerán en la invitación *</label>
+              <input id="nombres" name="nombres" type="text" placeholder="Ej. María & Andrés" required>
+            </div>
+
+            <div class="field">
+              <label for="tipoEvento">Tipo de evento *</label>
+              <select id="tipoEvento" name="tipoEvento" required>
+                <option value="">Selecciona una opción</option>
+                <option>Boda</option>
+                <option>Aniversario</option>
+                <option>XV años</option>
+                <option>Bautizo</option>
+                <option>Baby shower</option>
+                <option>Cumpleaños</option>
+                <option>Evento corporativo</option>
+                <option>Otro</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="fechaEvento">Fecha del evento *</label>
+              <input id="fechaEvento" name="fechaEvento" type="date" required>
+            </div>
+
+            <div class="field">
+              <label for="whatsapp">WhatsApp de contacto *</label>
+              <input id="whatsapp" name="whatsapp" type="tel" placeholder="+593..." required>
+            </div>
+
+            <div class="field">
+              <label for="email">Correo electrónico *</label>
+              <input id="email" name="email" type="email" placeholder="correo@ejemplo.com" required>
+            </div>
+          </div>
+        </section>
+
+        <section class="step" data-step="2" data-title="Ceremonia y recepción">
+          <div class="step-head">
+            <div class="step-num">Paso 02</div>
+            <h2>¿Dónde celebraremos?</h2>
+            <p>Agrega la información de ceremonia y recepción. Si ambas son en el mismo lugar, indícalo aquí.</p>
+          </div>
+
+          <div class="grid">
+            <div class="field">
+              <label for="nombreCeremonia">Nombre del lugar de la ceremonia</label>
+              <input id="nombreCeremonia" name="nombreCeremonia" type="text" placeholder="Ej. Iglesia San Francisco">
+            </div>
+
+            <div class="field">
+              <label for="horaCeremonia">Hora de la ceremonia</label>
+              <input id="horaCeremonia" name="horaCeremonia" type="time">
+            </div>
+
+            <div class="field full">
+              <label for="direccionCeremonia">Dirección de la ceremonia</label>
+              <input id="direccionCeremonia" name="direccionCeremonia" type="text" placeholder="Dirección completa">
+            </div>
+
+            <div class="field full">
+              <label for="mapsCeremonia">Enlace de Google Maps</label>
+              <input id="mapsCeremonia" name="mapsCeremonia" type="url" placeholder="https://maps.app.goo.gl/...">
+            </div>
+
+            <div class="field full">
+              <label>¿La recepción será en el mismo lugar?</label>
+              <div class="choice-grid" style="grid-template-columns:1fr 1fr">
+                <div class="choice">
+                  <input type="radio" id="mismoSi" name="mismoLugar" value="Sí">
+                  <label for="mismoSi"><strong>Sí</strong><span>Ceremonia y recepción comparten ubicación.</span></label>
+                </div>
+                <div class="choice">
+                  <input type="radio" id="mismoNo" name="mismoLugar" value="No">
+                  <label for="mismoNo"><strong>No</strong><span>Agregaré una ubicación diferente.</span></label>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="nombreRecepcion">Lugar de recepción</label>
+              <input id="nombreRecepcion" name="nombreRecepcion" type="text">
+            </div>
+
+            <div class="field">
+              <label for="horaRecepcion">Hora de recepción</label>
+              <input id="horaRecepcion" name="horaRecepcion" type="time">
+            </div>
+
+            <div class="field full">
+              <label for="direccionRecepcion">Dirección de recepción</label>
+              <input id="direccionRecepcion" name="direccionRecepcion" type="text">
+            </div>
+
+            <div class="field full">
+              <label for="mapsRecepcion">Enlace de Google Maps de recepción</label>
+              <input id="mapsRecepcion" name="mapsRecepcion" type="url" placeholder="https://maps.app.goo.gl/...">
+            </div>
+          </div>
+        </section>
+
+        <section class="step" data-step="3" data-title="Diseño">
+          <div class="step-head">
+            <div class="step-num">Paso 03</div>
+            <h2>El estilo de tu historia.</h2>
+            <p>Queremos entender cómo imaginas tu invitación. No necesitas saber de diseño, basta con contarnos qué te gusta.</p>
+          </div>
+
+          <div class="grid">
+            <div class="field full">
+              <label>Plan seleccionado *</label>
+              <div class="choice-grid">
+                <div class="choice">
+                  <input type="radio" id="essence" name="plan" value="Essence" required>
+                  <label for="essence"><strong>Essence</strong><span>Elegante, completa y basada en una colección CELEA.</span></label>
+                </div>
+                <div class="choice">
+                  <input type="radio" id="signature" name="plan" value="Signature">
+                  <label for="signature"><strong>Signature</strong><span>Personalizada para cada invitado, con RSVP inteligente.</span></label>
+                </div>
+                <div class="choice">
+                  <input type="radio" id="atelier" name="plan" value="Atelier">
+                  <label for="atelier"><strong>Atelier</strong><span>Diseño creado desde cero y dirección creativa.</span></label>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="estilo">Estilo que imaginas</label>
+              <select id="estilo" name="estilo">
+                <option value="">Selecciona una opción</option>
+                <option>Romántico</option>
+                <option>Botánico</option>
+                <option>Minimalista</option>
+                <option>Editorial</option>
+                <option>Clásico</option>
+                <option>Moderno</option>
+                <option>Nocturno</option>
+                <option>Otro</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="paleta">Paleta de colores</label>
+              <input id="paleta" name="paleta" type="text" placeholder="Ej. terracota, crema y verde oliva">
+            </div>
+
+            <div class="field full">
+              <label for="frase">Frase, mensaje o versículo especial</label>
+              <textarea id="frase" name="frase" placeholder="Escribe aquí el texto que te gustaría destacar..."></textarea>
+            </div>
+
+            <div class="field">
+              <label for="dressCode">Código de vestimenta</label>
+              <input id="dressCode" name="dressCode" type="text" placeholder="Ej. Elegante / Formal">
+            </div>
+
+            <div class="field">
+              <label for="coloresReservados">Colores reservados</label>
+              <input id="coloresReservados" name="coloresReservados" type="text" placeholder="Ej. blanco, beige y sus tonalidades">
+            </div>
+          </div>
+        </section>
+
+        <section class="step" data-step="4" data-title="Nuestra historia">
+          <div class="step-head">
+            <div class="step-num">Paso 04</div>
+            <h2>Fotografías, música y recuerdos.</h2>
+            <p>Aquí reuniremos los elementos que harán que la invitación se sienta realmente suya.</p>
+          </div>
+
+          <div class="grid">
+            <div class="field full">
+              <label>Fotografías</label>
+              <div class="upload">
+                <strong>Selecciona tus fotografías</strong>
+                <span>En esta primera versión los archivos aún no se enviarán. La carga a Google Drive se conectará después.</span>
+                <input type="file" id="fotos" name="fotos" multiple accept="image/*">
+              </div>
+            </div>
+
+            <div class="field full">
+              <label for="musica">Canción o música de fondo</label>
+              <input id="musica" name="musica" type="text" placeholder="Nombre de la canción y artista">
+              <span class="hint">Signature y Atelier incluyen música de fondo.</span>
+            </div>
+
+            <div class="field full">
+              <label for="historia">¿Hay algo de su historia que quieras que conozcamos?</label>
+              <textarea id="historia" name="historia" placeholder="Cómo se conocieron, qué los representa, algún lugar especial, símbolos importantes..."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="step" data-step="5" data-title="Regalos">
+          <div class="step-head">
+            <div class="step-num">Paso 05</div>
+            <h2>Detalles y regalos.</h2>
+            <p>Esta sección es completamente opcional y puede adaptarse al tono que ustedes prefieran.</p>
+          </div>
+
+          <div class="grid">
+            <div class="field full">
+              <label>¿Desean incluir una sección de regalos?</label>
+              <div class="choice-grid" style="grid-template-columns:1fr 1fr">
+                <div class="choice">
+                  <input type="radio" id="regalosSi" name="regalos" value="Sí">
+                  <label for="regalosSi"><strong>Sí</strong><span>Queremos mostrar opciones de regalo.</span></label>
+                </div>
+                <div class="choice">
+                  <input type="radio" id="regalosNo" name="regalos" value="No">
+                  <label for="regalosNo"><strong>No</strong><span>Preferimos omitir esta sección.</span></label>
+                </div>
+              </div>
+            </div>
+
+            <div class="field full">
+              <label for="mensajeRegalos">Mensaje para la sección de regalos</label>
+              <textarea id="mensajeRegalos" name="mensajeRegalos" placeholder="Ej. Tu presencia es nuestro mejor regalo..."></textarea>
+            </div>
+
+            <div class="field full">
+              <label for="datosRegalos">Datos o instrucciones de regalo</label>
+              <textarea id="datosRegalos" name="datosRegalos" placeholder="Datos bancarios, mesa de regalos u otra información."></textarea>
+              <span class="hint">Estos datos se revisarán antes de publicar la invitación.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="step" data-step="6" data-title="RSVP">
+          <div class="step-head">
+            <div class="step-num">Paso 06</div>
+            <h2>Confirmaciones sin complicaciones.</h2>
+            <p>Define cómo quieres recibir las respuestas de tus invitados.</p>
+          </div>
+
+          <div class="grid">
+            <div class="field">
+              <label for="fechaLimite">Fecha límite de confirmación</label>
+              <input id="fechaLimite" name="fechaLimite" type="date">
+            </div>
+
+            <div class="field">
+              <label for="preguntaExtra">Pregunta adicional opcional</label>
+              <input id="preguntaExtra" name="preguntaExtra" type="text" placeholder="Ej. ¿Necesitas transporte?">
+            </div>
+
+            <div class="field full">
+              <label>¿Solicitamos nombres de acompañantes?</label>
+              <div class="choice-grid" style="grid-template-columns:1fr 1fr">
+                <div class="choice">
+                  <input type="radio" id="acompanantesSi" name="acompanantes" value="Sí">
+                  <label for="acompanantesSi"><strong>Sí</strong><span>Registrar nombres cuando haya más de un cupo.</span></label>
+                </div>
+                <div class="choice">
+                  <input type="radio" id="acompanantesNo" name="acompanantes" value="No">
+                  <label for="acompanantesNo"><strong>No</strong><span>Solo necesitamos el número de asistentes.</span></label>
+                </div>
+              </div>
+            </div>
+
+            <div class="field full">
+              <label for="instruccionesRsvp">Instrucciones especiales para RSVP</label>
+              <textarea id="instruccionesRsvp" name="instruccionesRsvp" placeholder="Restricciones, políticas del evento o información que debamos considerar."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="step" data-step="7" data-title="Invitados">
+          <div class="step-head">
+            <div class="step-num">Paso 07</div>
+            <h2>Tu lista de invitados.</h2>
+            <p>En Signature y Atelier utilizamos esta lista para generar invitaciones personalizadas, cupos y enlaces individuales.</p>
+          </div>
+
+          <div class="grid">
+            <div class="field full">
+              <label>Lista de invitados</label>
+              <div class="upload">
+                <strong>Sube tu archivo Excel</strong>
+                <span>Idealmente debe contener las columnas INVITADO y CUPOS. La conexión real del archivo se activará en la siguiente etapa.</span>
+                <input type="file" id="listaInvitados" name="listaInvitados" accept=".xlsx,.xls,.csv">
+              </div>
+            </div>
+
+            <div class="field full">
+              <label for="politicaNinos">Niños en el evento</label>
+              <select id="politicaNinos" name="politicaNinos">
+                <option value="">Selecciona una opción</option>
+                <option>Niños bienvenidos</option>
+                <option>Solo adultos</option>
+                <option>Depende de cada invitación</option>
+                <option>No aplica</option>
+              </select>
+            </div>
+
+            <div class="field full">
+              <label for="infoAdicional">Información adicional para invitados</label>
+              <textarea id="infoAdicional" name="infoAdicional" placeholder="Estacionamiento, transporte, hospedaje, hashtag, persona de contacto, recomendaciones..."></textarea>
+            </div>
+
+            <div class="field full">
+              <label for="mensajeFinal">Mensaje final de la invitación</label>
+              <textarea id="mensajeFinal" name="mensajeFinal" placeholder="Ej. Nos encantará celebrar este día junto a ti."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="step" data-step="8" data-title="Revisar y enviar">
+          <div class="step-head">
+            <div class="step-num">Paso 08</div>
+            <h2>Revisemos todo.</h2>
+            <p>Esta es una vista resumida de la información principal. Después conectaremos este envío directamente con la base de CELEA.</p>
+          </div>
+
+          <div class="summary" id="summary"></div>
+
+          <label class="consent">
+            <input type="checkbox" id="confirmacionFinal">
+            <span>Confirmo que la información proporcionada es correcta y entiendo que podré solicitar ajustes durante las rondas incluidas en mi plan.</span>
+          </label>
+        </section>
+
+        <div class="nav-actions" id="navActions">
+          <button type="button" class="btn btn-secondary" id="prevBtn">Anterior</button>
+          <button type="button" class="btn btn-primary" id="nextBtn">Continuar</button>
+        </div>
+      </form>
+
+      <div class="success" id="success">
+        <div class="success-icon">✓</div>
+        <h2>¡Recibimos tu historia! ♡</h2>
+        <p>
+          Esta versión todavía es una demostración visual y no ha enviado datos a Google Sheets. En el siguiente paso conectaremos el formulario con el sistema de CELEA.
+        </p>
+        <a href="../" class="btn btn-primary">Volver a CELEA Studio</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("celeaForm");
+    const steps = [...document.querySelectorAll(".step")];
+    const progressBar = document.getElementById("progressBar");
+    const progressText = document.getElementById("progressText");
+    const progressPercent = document.getElementById("progressPercent");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const navActions = document.getElementById("navActions");
+    const success = document.getElementById("success");
+    const summary = document.getElementById("summary");
+
+    let current = 0;
+
+    function updateUI(){
+      steps.forEach((step,i)=>step.classList.toggle("active",i===current));
+
+      const percent = Math.round(((current + 1) / steps.length) * 100);
+      progressBar.style.width = percent + "%";
+      progressPercent.textContent = percent + "%";
+      progressText.textContent = `Paso ${current + 1} de ${steps.length} · ${steps[current].dataset.title}`;
+
+      prevBtn.style.visibility = current === 0 ? "hidden" : "visible";
+      nextBtn.textContent = current === steps.length - 1 ? "Enviar información" : "Continuar";
+
+      if(current === steps.length - 1) buildSummary();
+
+      window.scrollTo({top:0,behavior:"smooth"});
+    }
+
+    function validateCurrent(){
+      const required = [...steps[current].querySelectorAll("[required]")];
+
+      for(const field of required){
+        if(field.type === "radio"){
+          const checked = steps[current].querySelector(`[name="${field.name}"]:checked`);
+          if(!checked){
+            alert("Por favor completa los campos obligatorios antes de continuar.");
+            return false;
+          }
+        }else if(!field.value.trim()){
+          field.focus();
+          alert("Por favor completa los campos obligatorios antes de continuar.");
+          return false;
+        }else if(!field.checkValidity()){
+          field.reportValidity();
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function valueOf(name){
+      const field = form.elements[name];
+      if(!field) return "—";
+
+      if(field instanceof RadioNodeList){
+        return field.value || "—";
+      }
+      return field.value || "—";
+    }
+
+    function buildSummary(){
+      const items = [
+        ["Nombres", valueOf("nombres")],
+        ["Tipo de evento", valueOf("tipoEvento")],
+        ["Fecha del evento", valueOf("fechaEvento")],
+        ["Plan", valueOf("plan")],
+        ["Ceremonia", valueOf("nombreCeremonia")],
+        ["Recepción", valueOf("nombreRecepcion")],
+        ["Estilo", valueOf("estilo")],
+        ["Paleta", valueOf("paleta")],
+        ["Código de vestimenta", valueOf("dressCode")],
+        ["Música", valueOf("musica")],
+        ["Sección de regalos", valueOf("regalos")],
+        ["Fecha límite RSVP", valueOf("fechaLimite")],
+        ["Acompañantes", valueOf("acompanantes")],
+        ["Niños", valueOf("politicaNinos")]
+      ];
+
+      summary.innerHTML = items.map(([label,value])=>`
+        <div class="summary-row">
+          <b>${label}</b>
+          <span>${value}</span>
+        </div>
+      `).join("");
+    }
+
+    nextBtn.addEventListener("click",()=>{
+      if(current < steps.length - 1){
+        if(!validateCurrent()) return;
+        current++;
+        updateUI();
+      }else{
+        if(!document.getElementById("confirmacionFinal").checked){
+          alert("Confirma la revisión final antes de continuar.");
+          return;
+        }
+
+        form.style.display = "none";
+        navActions.style.display = "none";
+        document.querySelector(".progress-wrap").style.display = "none";
+        success.classList.add("active");
+        window.scrollTo({top:0,behavior:"smooth"});
+      }
+    });
+
+    prevBtn.addEventListener("click",()=>{
+      if(current > 0){
+        current--;
+        updateUI();
+      }
+    });
+
+    updateUI();
+  </script>
+</body>
+</html>
