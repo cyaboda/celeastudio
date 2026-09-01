@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f2ee">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>CELEA Studio · Admin</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f7f2ee;
+      --card: rgba(255,255,255,.82);
+      --ink: #2f332f;
+      --text: #5f625d;
+      --muted: #92958f;
+      --rose: #caa3a1;
+      --rose-soft: #f4e6e4;
+      --sage: #8fa186;
+      --sage-dark: #61715a;
+      --sage-soft: #e8eee4;
+      --cream: #fffaf4;
+      --line: rgba(49,55,48,.10);
+      --shadow: 0 18px 48px rgba(68,58,54,.08);
+      --radius: 26px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "DM Sans", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 4%, rgba(232,238,228,.9), transparent 30%),
+        radial-gradient(circle at 92% 2%, rgba(244,230,228,.9), transparent 27%),
+        var(--bg);
+    }
+
+    button, input, select { font: inherit; }
+    .hidden { display: none !important; }
+
+    .login-screen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 28px 20px;
+    }
+
+    .login-card {
+      width: min(100%, 430px);
+      border-radius: 34px;
+      padding: 38px 28px 30px;
+      background: rgba(255,255,255,.78);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,.9);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .logo {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      margin: 0 auto 22px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, var(--rose-soft), var(--sage-soft));
+      font-family: "Playfair Display", serif;
+      font-size: 34px;
+      color: var(--sage-dark);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--sage-soft);
+      color: var(--sage-dark);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .13em;
+    }
+
+    h1, h2, h3 {
+      font-family: "Playfair Display", serif;
+      font-weight: 600;
+    }
+
+    .login-card h1 {
+      margin: 18px 0 8px;
+      font-size: 44px;
+    }
+
+    .login-card p {
+      color: var(--text);
+      line-height: 1.55;
+      margin: 0 0 24px;
+    }
+
+    .login-input {
+      width: 100%;
+      height: 56px;
+      border-radius: 17px;
+      border: 1px solid var(--line);
+      background: white;
+      padding: 0 17px;
+      outline: none;
+      margin-bottom: 12px;
+    }
+
+    .login-input:focus {
+      border-color: var(--sage);
+      box-shadow: 0 0 0 4px rgba(143,161,134,.13);
+    }
+
+    .primary-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 17px;
+      padding: 16px 18px;
+      background: var(--ink);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary-btn:disabled {
+      opacity: .55;
+      cursor: wait;
+    }
+
+    .login-error {
+      min-height: 20px;
+      color: #a6534c;
+      font-size: 12px;
+      margin-top: 11px;
+    }
+
+    .app {
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: calc(14px + env(safe-area-inset-top)) 20px 14px;
+      background: rgba(247,242,238,.82);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, var(--rose-soft), var(--sage-soft));
+      font-family: "Playfair Display", serif;
+      font-size: 20px;
+      color: var(--sage-dark);
+    }
+
+    .brand-text strong {
+      display: block;
+      font-size: 14px;
+      letter-spacing: .06em;
+    }
+
+    .brand-text span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.74);
+      min-width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      color: var(--ink);
+      cursor: pointer;
+      padding: 0 13px;
+    }
+
+    .container {
+      width: min(100% - 30px, 1120px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 42px 0 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 7vw, 64px);
+      margin: 10px 0 8px;
+      line-height: 1;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--text);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 20px 0 24px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 12px 28px rgba(68,58,54,.05);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+
+    .stat-value {
+      font-family: "Playfair Display", serif;
+      font-size: 34px;
+      line-height: 1;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .search {
+      width: 100%;
+      height: 48px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255,255,255,.75);
+      padding: 0 15px;
+      outline: none;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+
+    .filters::-webkit-scrollbar { display:none; }
+
+    .filter-btn {
+      flex: 0 0 auto;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.7);
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .filter-btn.active {
+      background: var(--ink);
+      color: white;
+      border-color: var(--ink);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: end;
+      margin: 28px 0 13px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 30px;
+    }
+
+    .section-head span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .project-list {
+      display: grid;
+      gap: 13px;
+    }
+
+    .project-card {
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(255,255,255,.92);
+      border-radius: 24px;
+      box-shadow: 0 12px 30px rgba(68,58,54,.05);
+      padding: 20px;
+    }
+
+    .project-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 16px;
+    }
+
+    .project-id {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--sage-dark);
+      margin-bottom: 6px;
+    }
+
+    .project-name {
+      font-size: 22px;
+      margin: 0;
+    }
+
+    .status {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      padding: 8px 11px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      background: var(--sage-soft);
+      color: var(--sage-dark);
+    }
+
+    .status[data-status*="NUEVO"] {
+      background: var(--rose-soft);
+      color: #8f625e;
+    }
+
+    .status[data-status*="REVIS"] {
+      background: #f6ecd9;
+      color: #9d7433;
+    }
+
+    .status[data-status*="PUBLIC"] {
+      background: var(--sage-soft);
+      color: var(--sage-dark);
+    }
+
+    .project-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px 14px;
+      margin: 14px 0 16px;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .project-finance {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      padding-top: 15px;
+      border-top: 1px solid var(--line);
+    }
+
+    .finance-box {
+      background: rgba(247,242,238,.62);
+      border-radius: 15px;
+      padding: 12px;
+    }
+
+    .finance-box span {
+      display: block;
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .finance-box strong {
+      font-size: 14px;
+    }
+
+    .project-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .action-link {
+      text-decoration: none;
+      border-radius: 14px;
+      padding: 11px 13px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink);
+      background: var(--sage-soft);
+      border: 1px solid rgba(97,113,90,.08);
+    }
+
+    .action-link.secondary {
+      background: var(--rose-soft);
+    }
+
+    .empty {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--muted);
+      background: rgba(255,255,255,.55);
+      border: 1px dashed rgba(49,55,48,.15);
+      border-radius: 22px;
+    }
+
+    .loading {
+      opacity: .55;
+      pointer-events: none;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 50;
+      left: 50%;
+      bottom: calc(24px + env(safe-area-inset-bottom));
+      transform: translate(-50%, 30px);
+      background: #293028;
+      color: white;
+      padding: 12px 16px;
+      border-radius: 14px;
+      box-shadow: 0 16px 35px rgba(0,0,0,.18);
+      opacity: 0;
+      pointer-events: none;
+      transition: .25s ease;
+      font-size: 12px;
+      max-width: calc(100% - 32px);
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @media (max-width: 860px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .project-top {
+        flex-direction: column;
+      }
+
+      .project-finance {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .hero {
+        padding-top: 30px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <section class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="logo">C</div>
+      <span class="eyebrow">🔒 Administración</span>
+      <h1>CELEA</h1>
+      <p>Panel privado para gestionar proyectos, clientes y entregas.</p>
+
+      <form id="loginForm" autocomplete="off">
+        <input
+          class="login-input"
+          id="passwordInput"
+          type="password"
+          placeholder="Clave administrativa"
+          aria-label="Clave administrativa"
+          required>
+
+        <button class="primary-btn" id="loginBtn" type="submit">Ingresar</button>
+        <div class="login-error" id="loginError"></div>
+      </form>
+    </div>
+  </section>
+
+  <main class="app hidden" id="dashboard">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">C</div>
+        <div class="brand-text">
+          <strong>CELEA STUDIO</strong>
+          <span>Panel administrativo</span>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <button class="icon-btn" id="refreshBtn" type="button" title="Actualizar">↻</button>
+        <button class="icon-btn" id="logoutBtn" type="button">Salir</button>
+      </div>
+    </header>
+
+    <div class="container">
+      <section class="hero">
+        <span class="eyebrow">Panel privado</span>
+        <h1>Proyectos</h1>
+        <p>Todo CELEA en un solo lugar.</p>
+      </section>
+
+      <section class="stats">
+        <div class="stat-card">
+          <div class="stat-label">Proyectos</div>
+          <div class="stat-value" id="statProjects">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Ventas</div>
+          <div class="stat-value" id="statSales">$0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Saldos</div>
+          <div class="stat-value" id="statBalances">$0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Nuevos</div>
+          <div class="stat-value" id="statNew">0</div>
+        </div>
+      </section>
+
+      <section class="toolbar">
+        <input class="search" id="searchInput" type="search" placeholder="Buscar por nombre, ID, plan o evento…">
+        <div class="filters" id="filters"></div>
+      </section>
+
+      <div class="section-head">
+        <h2>Todos los proyectos</h2>
+        <span id="projectCount">0 proyectos</span>
+      </div>
+
+      <section class="project-list" id="projectList"></section>
+    </div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzu42ewgHPaFYryJMtRK_L2_iphOU6r0Mml7A3UCe7_elkqy7oWnmv6B5caJDuD9lA6/exec';
+    const TOKEN_KEY = "celea_admin_token";
+    const EXPIRY_KEY = "celea_admin_expiry";
+
+    let proyectos = [];
+    let filtroEstado = "TODOS";
+    let refreshTimer = null;
+
+    const $ = id => document.getElementById(id);
+
+    function jsonp(params) {
+      return new Promise((resolve, reject) => {
+        const callback = "celea_cb_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+        const script = document.createElement("script");
+
+        const timeout = setTimeout(() => {
+          cleanup();
+          reject(new Error("La solicitud tardó demasiado."));
+        }, 15000);
+
+        function cleanup() {
+          clearTimeout(timeout);
+          delete window[callback];
+          script.remove();
+        }
+
+        window[callback] = data => {
+          cleanup();
+          resolve(data);
+        };
+
+        const query = new URLSearchParams({
+          ...params,
+          callback,
+          _: Date.now()
+        });
+
+        script.src = API_URL + "?" + query.toString();
+        script.onerror = () => {
+          cleanup();
+          reject(new Error("No se pudo conectar con CELEA."));
+        };
+
+        document.body.appendChild(script);
+      });
+    }
+
+    function guardarSesion(token, segundos) {
+      localStorage.setItem(TOKEN_KEY, token);
+      localStorage.setItem(EXPIRY_KEY, String(Date.now() + segundos * 1000));
+    }
+
+    function obtenerToken() {
+      const token = localStorage.getItem(TOKEN_KEY);
+      const expiry = Number(localStorage.getItem(EXPIRY_KEY) || 0);
+
+      if (!token || !expiry || Date.now() >= expiry) {
+        limpiarSesion();
+        return "";
+      }
+
+      return token;
+    }
+
+    function limpiarSesion() {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(EXPIRY_KEY);
+    }
+
+    function mostrarLogin() {
+      $("dashboard").classList.add("hidden");
+      $("loginScreen").classList.remove("hidden");
+      $("passwordInput").value = "";
+      setTimeout(() => $("passwordInput").focus(), 80);
+    }
+
+    function mostrarDashboard() {
+      $("loginScreen").classList.add("hidden");
+      $("dashboard").classList.remove("hidden");
+    }
+
+    function toast(texto) {
+      const el = $("toast");
+      el.textContent = texto;
+      el.classList.add("show");
+      clearTimeout(el._timer);
+      el._timer = setTimeout(() => el.classList.remove("show"), 2500);
+    }
+
+    async function login(clave) {
+      $("loginBtn").disabled = true;
+      $("loginBtn").textContent = "Ingresando…";
+      $("loginError").textContent = "";
+
+      try {
+        const data = await jsonp({
+          accion: "admin_login",
+          clave
+        });
+
+        if (!data.ok) {
+          $("loginError").textContent = data.mensaje || "No se pudo ingresar.";
+          return;
+        }
+
+        guardarSesion(data.token, Number(data.duracionSegundos) || 28800);
+        mostrarDashboard();
+        await cargarProyectos(false);
+        iniciarAutoRefresh();
+
+      } catch (error) {
+        $("loginError").textContent = error.message || "No se pudo ingresar.";
+      } finally {
+        $("loginBtn").disabled = false;
+        $("loginBtn").textContent = "Ingresar";
+      }
+    }
+
+    async function cargarProyectos(mostrarAviso = true) {
+      const token = obtenerToken();
+
+      if (!token) {
+        mostrarLogin();
+        return;
+      }
+
+      $("dashboard").classList.add("loading");
+
+      try {
+        const data = await jsonp({
+          accion: "admin_proyectos",
+          token
+        });
+
+        if (!data.ok) {
+          if (data.codigoError === "SESION_INVALIDA") {
+            limpiarSesion();
+            mostrarLogin();
+            toast("La sesión venció.");
+            return;
+          }
+
+          throw new Error(data.mensaje || "No se pudieron cargar los proyectos.");
+        }
+
+        proyectos = Array.isArray(data.proyectos) ? data.proyectos : [];
+        renderStats(data.resumen || {});
+        renderFilters(data.resumen?.porEstado || {});
+        renderProjects();
+
+        if (mostrarAviso) {
+          toast("Panel actualizado");
+        }
+
+      } catch (error) {
+        toast(error.message || "Error al actualizar.");
+      } finally {
+        $("dashboard").classList.remove("loading");
+      }
+    }
+
+    function renderStats(resumen) {
+      $("statProjects").textContent = Number(resumen.totalProyectos || 0);
+      $("statSales").textContent = money(resumen.ventas || 0);
+      $("statBalances").textContent = money(resumen.saldosPendientes || 0);
+      $("statNew").textContent = Number(resumen.porEstado?.NUEVO || 0);
+    }
+
+    function renderFilters(porEstado) {
+      const estados = Object.keys(porEstado).sort();
+
+      $("filters").innerHTML = [
+        `<button class="filter-btn ${filtroEstado === "TODOS" ? "active" : ""}" data-filter="TODOS">Todos</button>`,
+        ...estados.map(estado =>
+          `<button class="filter-btn ${filtroEstado === estado ? "active" : ""}" data-filter="${escapeHtml(estado)}">${escapeHtml(estado)} · ${porEstado[estado]}</button>`
+        )
+      ].join("");
+
+      document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          filtroEstado = btn.dataset.filter;
+          renderFilters(porEstado);
+          renderProjects();
+        });
+      });
+    }
+
+    function renderProjects() {
+      const busqueda = $("searchInput").value.trim().toLowerCase();
+
+      const visibles = proyectos.filter(p => {
+        const estado = String(p.estado || "").toUpperCase();
+        const coincideEstado = filtroEstado === "TODOS" || estado === filtroEstado;
+
+        const texto = [
+          p.id,
+          p.nombres,
+          p.plan,
+          p.tipoEvento,
+          p.estado,
+          p.email,
+          p.whatsapp
+        ].join(" ").toLowerCase();
+
+        return coincideEstado && (!busqueda || texto.includes(busqueda));
+      });
+
+      $("projectCount").textContent = visibles.length + (visibles.length === 1 ? " proyecto" : " proyectos");
+
+      if (!visibles.length) {
+        $("projectList").innerHTML = '<div class="empty">No hay proyectos que coincidan con este filtro.</div>';
+        return;
+      }
+
+      $("projectList").innerHTML = visibles.map(p => {
+        const acciones = [];
+
+        if (p.urlCarpetaDrive) {
+          acciones.push(`<a class="action-link" href="${escapeAttr(p.urlCarpetaDrive)}" target="_blank" rel="noopener">Abrir Drive</a>`);
+        }
+
+        if (p.urlRevision) {
+          acciones.push(`<a class="action-link secondary" href="${escapeAttr(p.urlRevision)}" target="_blank" rel="noopener">Revisión</a>`);
+        }
+
+        if (p.urlFinal) {
+          acciones.push(`<a class="action-link secondary" href="${escapeAttr(p.urlFinal)}" target="_blank" rel="noopener">Invitación final</a>`);
+        }
+
+        return `
+          <article class="project-card">
+            <div class="project-top">
+              <div>
+                <div class="project-id">${escapeHtml(p.id || "SIN ID")}</div>
+                <h3 class="project-name">${escapeHtml(p.nombres || "Proyecto sin nombre")}</h3>
+              </div>
+
+              <span class="status" data-status="${escapeAttr(p.estado || "")}">
+                ${escapeHtml(p.estado || "SIN ESTADO")}
+              </span>
+            </div>
+
+            <div class="project-meta">
+              <span>${escapeHtml(p.tipoEvento || "Evento")}</span>
+              <span>·</span>
+              <span>${escapeHtml(p.plan || "Sin plan")}</span>
+              ${p.fechaEvento ? `<span>·</span><span>${formatDate(p.fechaEvento)}</span>` : ""}
+            </div>
+
+            <div class="project-finance">
+              <div class="finance-box">
+                <span>Valor total</span>
+                <strong>${money(p.valorTotal)}</strong>
+              </div>
+
+              <div class="finance-box">
+                <span>Anticipo</span>
+                <strong>${money(p.anticipo)}</strong>
+              </div>
+
+              <div class="finance-box">
+                <span>Saldo</span>
+                <strong>${money(p.saldo)}</strong>
+              </div>
+            </div>
+
+            ${acciones.length ? `<div class="project-actions">${acciones.join("")}</div>` : ""}
+          </article>
+        `;
+      }).join("");
+    }
+
+    function money(value) {
+      const numero = Number(value);
+      if (!Number.isFinite(numero)) return "$0";
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0
+      }).format(numero);
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const parts = String(value).split("-");
+      if (parts.length !== 3) return escapeHtml(value);
+
+      const date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+
+      return new Intl.DateTimeFormat("es-EC", {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      }).format(date);
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value);
+    }
+
+    function iniciarAutoRefresh() {
+      clearInterval(refreshTimer);
+
+      refreshTimer = setInterval(() => {
+        if (!document.hidden && obtenerToken()) {
+          cargarProyectos(false);
+        }
+      }, 60000);
+    }
+
+    async function logout() {
+      const token = obtenerToken();
+
+      limpiarSesion();
+      clearInterval(refreshTimer);
+
+      if (token) {
+        try {
+          await jsonp({
+            accion: "admin_logout",
+            token
+          });
+        } catch (_) {}
+      }
+
+      mostrarLogin();
+    }
+
+    $("loginForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const clave = $("passwordInput").value;
+
+      if (!clave) {
+        $("loginError").textContent = "Ingresa la clave.";
+        return;
+      }
+
+      login(clave);
+    });
+
+    $("searchInput").addEventListener("input", renderProjects);
+    $("refreshBtn").addEventListener("click", () => cargarProyectos(true));
+    $("logoutBtn").addEventListener("click", logout);
+
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden && obtenerToken()) {
+        cargarProyectos(false);
+      }
+    });
+
+    (async function init() {
+      if (obtenerToken()) {
+        mostrarDashboard();
+        await cargarProyectos(false);
+        iniciarAutoRefresh();
+      } else {
+        mostrarLogin();
+      }
+    })();
+  </script>
+</body>
+</html>
