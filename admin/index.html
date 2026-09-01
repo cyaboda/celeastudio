@@ -361,6 +361,39 @@
               <div class="project-actions" id="guestSheetActions"></div>
             </div>
           </section>
+          <section class="detail-section">
+            <div class="section-head">
+              <div>
+                <span class="eyebrow">PUBLICACIÓN</span>
+                <h3>Invitación en línea</h3>
+              </div>
+            </div>
+            <div class="info-grid">
+              <div class="read-card">
+                <span>Repositorio</span>
+                <strong id="publishRepo">Todavía no creado</strong>
+              </div>
+              <div class="read-card">
+                <span>Dashboard RSVP</span>
+                <strong id="publishDashboard">Todavía no publicado</strong>
+              </div>
+            </div>
+            <div class="form-grid" style="margin-top:14px">
+              <label class="field">
+                <span>Dominio personalizado (opcional)</span>
+                <input id="publishDomain" type="text" placeholder="mariayjuan.com">
+              </label>
+              <div class="field">
+                <span>Clave RSVP del cliente</span>
+                <div class="read-value" id="publishPin">Se generará al publicar</div>
+              </div>
+            </div>
+            <p class="helper" id="publishHelp">Si dejas el dominio vacío, CELEA usará GitHub Pages.</p>
+            <div class="project-actions" id="publishActions">
+              <button class="action-btn open-btn" id="publishBtn" type="button">Generar y publicar</button>
+            </div>
+          </section>
+
 
           <section class="panel full">
             <h3>Archivos</h3>
@@ -586,6 +619,21 @@
         $("prepareGuestsBtn").onclick=prepararInvitados;
       }
 
+      $("publishRepo").textContent=p.githubRepo||"Todavía no creado";
+      $("publishDashboard").textContent=p.rsvpDashboardUrl||"Todavía no publicado";
+      $("publishDomain").value=p.dominioPersonalizado||"";
+      $("publishPin").textContent=p.rsvpPin||"Se generará al publicar";
+      $("publishHelp").textContent=p.dominioPersonalizado
+        ? "Dominio configurado. El DNS debe apuntar correctamente a GitHub Pages."
+        : "Si dejas el dominio vacío, CELEA usará GitHub Pages.";
+
+      const publishLinks=[];
+      if(p.urlFinal)publishLinks.push(`<a class="action-link" href="${escapeAttr(p.urlFinal)}" target="_blank" rel="noopener">Abrir invitación</a>`);
+      if(p.rsvpDashboardUrl)publishLinks.push(`<a class="action-link secondary" href="${escapeAttr(p.rsvpDashboardUrl)}" target="_blank" rel="noopener">Abrir dashboard RSVP</a>`);
+      publishLinks.push(`<button class="action-btn open-btn" id="publishBtn" type="button">${p.githubRepo?"Actualizar publicación":"Generar y publicar"}</button>`);
+      $("publishActions").innerHTML=publishLinks.join("");
+      $("publishBtn").onclick=publicarProyecto;
+
       recalcularSaldoVista();
     }
 
@@ -597,6 +645,48 @@
       const anticipo=Number($("editAnticipo").value)||0;
       const final=Number($("editPagoFinal").value)||0;
       $("editSaldo").value=Math.max(0,total-anticipo-final).toFixed(2);
+    }
+
+    async function publicarProyecto(){
+      if(!proyectoActual)return;
+      const token=obtenerToken();
+      if(!token)return mostrarLogin();
+
+      const btn=$("publishBtn");
+      if(btn){btn.disabled=true;btn.textContent="Publicando…";}
+
+      try{
+        const dominio=$("publishDomain").value.trim();
+        toast("CELEA está creando la publicación…");
+
+        const data=await jsonp({
+          accion:"admin_publicar",
+          token,
+          id:proyectoActual.id,
+          dominio
+        });
+
+        if(!data.ok)throw new Error(data.mensaje||"No se pudo publicar.");
+
+        toast(`${data.enlacesGenerados} enlaces generados ✓`);
+
+        const detalle=await jsonp({
+          accion:"admin_detalle",
+          token,
+          id:proyectoActual.id
+        });
+
+        if(detalle.ok){
+          proyectoActual=detalle.proyecto;
+          eventoActual=detalle.evento||{};
+          llenarModal(proyectoActual,eventoActual);
+        }
+
+        if(data.avisoDominio)toast(data.avisoDominio);
+      }catch(e){
+        toast(e.message||"No se pudo publicar.");
+        if(btn){btn.disabled=false;btn.textContent="Generar y publicar";}
+      }
     }
 
     async function importarInvitados(){
