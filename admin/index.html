@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f7f2ee">
   <meta name="robots" content="noindex,nofollow,noarchive">
-  <title>CELEA Studio · Admin</title>
+  <title>CELEA Studio · Admin V7</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -132,6 +132,67 @@
     .stack-info{display:grid;gap:12px}
     .stack-info>div{background:rgba(247,242,238,.7);border-radius:16px;padding:14px}
 
+
+    /* CELEA Admin V7 · Centro de publicación */
+    .detail-section{
+      background:white;border:1px solid var(--line);border-radius:22px;padding:18px;
+      grid-column:1/-1;
+    }
+    .detail-section .section-head{margin:0 0 15px;align-items:center}
+    .detail-section .section-head h3{margin:3px 0 0;font-size:20px}
+    .read-card{
+      background:rgba(247,242,238,.7);border-radius:18px;padding:16px;min-width:0
+    }
+    .read-card span,.field>span{
+      display:block;font-size:10px;color:var(--muted);font-weight:700;
+      letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px
+    }
+    .read-card strong{
+      display:block;font-size:14px;line-height:1.45;word-break:break-word
+    }
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .form-grid .field{display:block}
+    .form-grid input{
+      width:100%;height:44px;border:1px solid var(--line);border-radius:14px;
+      background:#fff;padding:0 13px;font:inherit;color:var(--ink);outline:none
+    }
+    .form-grid input:focus{border-color:rgba(97,113,90,.45);box-shadow:0 0 0 4px rgba(143,161,134,.12)}
+    .helper{margin:12px 0 0;color:var(--muted);font-size:12px;line-height:1.55}
+    .publish-state{
+      display:inline-flex;align-items:center;gap:7px;padding:8px 11px;border-radius:999px;
+      font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase
+    }
+    .publish-state.ready{background:var(--sage-soft);color:var(--sage-dark)}
+    .publish-state.pending{background:#f6ecd9;color:#9d7433}
+    .publish-state.live{background:#e6efe8;color:#536b57}
+    .publish-checklist{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 0
+    }
+    .publish-check{
+      border:1px solid var(--line);border-radius:16px;padding:12px;background:#fcfaf8;
+      display:flex;gap:9px;align-items:flex-start;min-width:0
+    }
+    .publish-check .dot{
+      width:22px;height:22px;display:grid;place-items:center;flex:0 0 22px;border-radius:50%;
+      font-size:11px;font-weight:900;background:#eee8e3;color:#9a918b
+    }
+    .publish-check.ok .dot{background:var(--sage-soft);color:var(--sage-dark)}
+    .publish-check.warn .dot{background:#f6ecd9;color:#9d7433}
+    .publish-check strong{display:block;font-size:11px;margin-bottom:2px}
+    .publish-check small{display:block;color:var(--muted);font-size:10px;line-height:1.35}
+    .publish-links{
+      display:flex;gap:8px;flex-wrap:wrap;margin-top:12px
+    }
+    .copy-btn{
+      border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:14px;
+      padding:11px 13px;font-size:11px;font-weight:700;cursor:pointer
+    }
+    .danger-note{
+      margin-top:12px;padding:11px 13px;border-radius:14px;background:#fff5ed;color:#8b603e;
+      font-size:11px;line-height:1.45
+    }
+    .action-btn:disabled{opacity:.45;cursor:not-allowed}
+
     .toast{position:fixed;z-index:100;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,30px);background:#293028;color:white;padding:12px 16px;border-radius:14px;box-shadow:0 16px 35px rgba(0,0,0,.18);opacity:0;pointer-events:none;transition:.25s ease;font-size:12px;max-width:calc(100% - 32px);text-align:center}
     .toast.show{opacity:1;transform:translate(-50%,0)}
     .loading{opacity:.55;pointer-events:none}
@@ -140,7 +201,7 @@
     @media(max-width:640px){
       .toolbar{grid-template-columns:1fr}
       .project-top{flex-direction:column}
-      .project-finance,.fields,.detail-grid,.info-grid,.summary-grid{grid-template-columns:1fr}.guest-module{flex-direction:column;align-items:stretch}.guest-module .project-actions{margin-top:10px}
+      .project-finance,.fields,.detail-grid,.info-grid,.summary-grid,.form-grid,.publish-checklist{grid-template-columns:1fr}.guest-module{flex-direction:column;align-items:stretch}.guest-module .project-actions{margin-top:10px}
       .panel.full,.summary-item.wide{grid-column:auto}
       .stats{grid-template-columns:1fr 1fr}
       .modal-backdrop{padding:0;align-items:end}
@@ -365,12 +426,29 @@
             <div class="section-head">
               <div>
                 <span class="eyebrow">PUBLICACIÓN</span>
-                <h3>Invitación en línea</h3>
+                <h3>Centro de publicación</h3>
+              </div>
+              <span class="publish-state pending" id="publishState">Pendiente</span>
+            </div>
+
+            <div class="publish-checklist">
+              <div class="publish-check" id="checkInfo">
+                <div class="dot">1</div>
+                <div><strong>Información</strong><small id="checkInfoText">Revisando datos…</small></div>
+              </div>
+              <div class="publish-check" id="checkGuests">
+                <div class="dot">2</div>
+                <div><strong>Invitados</strong><small id="checkGuestsText">Revisando base…</small></div>
+              </div>
+              <div class="publish-check" id="checkWeb">
+                <div class="dot">3</div>
+                <div><strong>Publicación</strong><small id="checkWebText">Aún no publicada</small></div>
               </div>
             </div>
+
             <div class="info-grid">
               <div class="read-card">
-                <span>Repositorio</span>
+                <span>Repositorio GitHub</span>
                 <strong id="publishRepo">Todavía no creado</strong>
               </div>
               <div class="read-card">
@@ -378,17 +456,24 @@
                 <strong id="publishDashboard">Todavía no publicado</strong>
               </div>
             </div>
+
             <div class="form-grid" style="margin-top:14px">
               <label class="field">
                 <span>Dominio personalizado (opcional)</span>
-                <input id="publishDomain" type="text" placeholder="mariayjuan.com">
+                <input id="publishDomain" type="text" placeholder="mariayjuan.com" autocomplete="off">
               </label>
               <div class="field">
                 <span>Clave RSVP del cliente</span>
-                <div class="read-value" id="publishPin">Se generará al publicar</div>
+                <div class="read-card" style="padding:12px 14px">
+                  <strong id="publishPin">Se generará al publicar</strong>
+                </div>
               </div>
             </div>
+
             <p class="helper" id="publishHelp">Si dejas el dominio vacío, CELEA usará GitHub Pages.</p>
+            <div class="danger-note hidden" id="publishWarning"></div>
+
+            <div class="publish-links" id="publishQuickActions"></div>
             <div class="project-actions" id="publishActions">
               <button class="action-btn open-btn" id="publishBtn" type="button">Generar y publicar</button>
             </div>
@@ -619,22 +704,107 @@
         $("prepareGuestsBtn").onclick=prepararInvitados;
       }
 
+      configurarCentroPublicacion(p,e);
+
+      recalcularSaldoVista();
+    }
+
+    function configurarCentroPublicacion(p,e={}){
+      const publicado=Boolean(p.githubRepo && p.urlFinal);
+      const tieneInfo=Boolean(
+        String(p.nombres||"").trim() &&
+        String(p.fechaEvento||"").trim() &&
+        String(e.nombreCeremonia||"").trim() &&
+        String(e.direccionCeremonia||"").trim()
+      );
+      const invitadosPreparados=Boolean(p.invitadosSheetUrl);
+      const invitadosImportados=Number(p.invitadosImportados||0)>0;
+
       $("publishRepo").textContent=p.githubRepo||"Todavía no creado";
       $("publishDashboard").textContent=p.rsvpDashboardUrl||"Todavía no publicado";
       $("publishDomain").value=p.dominioPersonalizado||"";
       $("publishPin").textContent=p.rsvpPin||"Se generará al publicar";
+
+      marcarCheck("checkInfo","checkInfoText",tieneInfo,
+        tieneInfo ? "Datos esenciales completos" : "Faltan datos esenciales del evento");
+      marcarCheck("checkGuests","checkGuestsText",invitadosImportados,
+        invitadosImportados
+          ? `${p.invitadosImportados} invitaciones listas`
+          : (invitadosPreparados ? "Base creada, falta importar invitados" : "Primero prepara la base de invitados"));
+      marcarCheck("checkWeb","checkWebText",publicado,
+        publicado ? "Invitación publicada" : "Aún no publicada");
+
+      const state=$("publishState");
+      state.className="publish-state "+(publicado?"live":(tieneInfo&&invitadosImportados?"ready":"pending"));
+      state.textContent=publicado?"Publicado":(tieneInfo&&invitadosImportados?"Listo para publicar":"Pendiente");
+
       $("publishHelp").textContent=p.dominioPersonalizado
         ? "Dominio configurado. El DNS debe apuntar correctamente a GitHub Pages."
-        : "Si dejas el dominio vacío, CELEA usará GitHub Pages.";
+        : "Sin dominio personalizado, CELEA publicará usando GitHub Pages.";
 
-      const publishLinks=[];
-      if(p.urlFinal)publishLinks.push(`<a class="action-link" href="${escapeAttr(p.urlFinal)}" target="_blank" rel="noopener">Abrir invitación</a>`);
-      if(p.rsvpDashboardUrl)publishLinks.push(`<a class="action-link secondary" href="${escapeAttr(p.rsvpDashboardUrl)}" target="_blank" rel="noopener">Abrir dashboard RSVP</a>`);
-      publishLinks.push(`<button class="action-btn open-btn" id="publishBtn" type="button">${p.githubRepo?"Actualizar publicación":"Generar y publicar"}</button>`);
-      $("publishActions").innerHTML=publishLinks.join("");
-      $("publishBtn").onclick=publicarProyecto;
+      const warning=$("publishWarning");
+      const faltantes=[];
+      if(!tieneInfo)faltantes.push("información esencial del evento");
+      if(!invitadosPreparados)faltantes.push("base individual de invitados");
+      else if(!invitadosImportados)faltantes.push("importación de invitados");
 
-      recalcularSaldoVista();
+      if(faltantes.length){
+        warning.classList.remove("hidden");
+        warning.textContent="Antes de publicar completa: "+faltantes.join(" + ")+".";
+      }else{
+        warning.classList.add("hidden");
+        warning.textContent="";
+      }
+
+      const quick=[];
+      if(p.urlFinal){
+        quick.push(`<a class="action-link" href="${escapeAttr(p.urlFinal)}" target="_blank" rel="noopener">Abrir invitación</a>`);
+        quick.push(`<button class="copy-btn" type="button" data-copy="${escapeAttr(p.urlFinal)}">Copiar URL</button>`);
+      }
+      if(p.rsvpDashboardUrl){
+        quick.push(`<a class="action-link secondary" href="${escapeAttr(p.rsvpDashboardUrl)}" target="_blank" rel="noopener">Abrir RSVP</a>`);
+        quick.push(`<button class="copy-btn" type="button" data-copy="${escapeAttr(p.rsvpDashboardUrl)}">Copiar URL RSVP</button>`);
+      }
+      if(p.rsvpPin){
+        quick.push(`<button class="copy-btn" type="button" data-copy="${escapeAttr(p.rsvpPin)}">Copiar clave RSVP</button>`);
+      }
+      $("publishQuickActions").innerHTML=quick.join("");
+      document.querySelectorAll("#publishQuickActions [data-copy]").forEach(btn=>{
+        btn.onclick=()=>copiarTexto(btn.dataset.copy,btn);
+      });
+
+      $("publishActions").innerHTML=
+        `<button class="action-btn open-btn" id="publishBtn" type="button">${publicado?"Actualizar publicación":"Generar y publicar"}</button>`;
+      const publishBtn=$("publishBtn");
+      publishBtn.disabled=!(tieneInfo && invitadosImportados);
+      publishBtn.title=publishBtn.disabled?"Completa la información e importa invitados antes de publicar":"";
+      publishBtn.onclick=publicarProyecto;
+    }
+
+    function marcarCheck(id,textId,ok,texto){
+      const box=$(id);
+      box.classList.toggle("ok",Boolean(ok));
+      box.classList.toggle("warn",!ok);
+      box.querySelector(".dot").textContent=ok?"✓":box.querySelector(".dot").textContent.replace("✓","");
+      $(textId).textContent=texto;
+    }
+
+    async function copiarTexto(texto,btn){
+      if(!texto)return;
+      const original=btn?.textContent||"Copiar";
+      try{
+        if(navigator.clipboard && window.isSecureContext){
+          await navigator.clipboard.writeText(texto);
+        }else{
+          const ta=document.createElement("textarea");
+          ta.value=texto;ta.style.position="fixed";ta.style.opacity="0";
+          document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();
+        }
+        if(btn){btn.textContent="Copiado ✓";setTimeout(()=>btn.textContent=original,1300)}
+        toast("Copiado al portapapeles ✓");
+      }catch(e){
+        toast("No se pudo copiar automáticamente.");
+      }
     }
 
     function valorBonito(v){const s=String(v??"").trim();return s||"—"}
@@ -657,7 +827,15 @@
 
       try{
         const dominio=$("publishDomain").value.trim();
-        toast("CELEA está creando la publicación…");
+        const esActualizacion=Boolean(proyectoActual.githubRepo);
+        const mensaje=esActualizacion
+          ? "CELEA actualizará los archivos publicados de este proyecto. ¿Continuar?"
+          : "CELEA creará el repositorio, GitHub Pages, enlaces de invitados y dashboard RSVP. ¿Publicar este proyecto?";
+        if(!confirm(mensaje)){
+          if(btn){btn.disabled=false;btn.textContent=esActualizacion?"Actualizar publicación":"Generar y publicar";}
+          return;
+        }
+        toast(esActualizacion?"Actualizando publicación…":"CELEA está creando la publicación…");
 
         const data=await jsonp({
           accion:"admin_publicar",
