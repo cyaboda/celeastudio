@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f7f0ea" />
   <meta name="description" content="CELEA Studio crea invitaciones digitales elegantes, interactivas y personalizadas para momentos inolvidables." />
   <title>CELEA Studio | Invitaciones que cuentan tu historia</title>
-  <!-- CELEA Studio V4 · demo automática dentro del teléfono -->
+  <!-- CELEA Studio V5 · demos comerciales renovados -->
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -562,34 +562,149 @@
     }
     .demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     .demo-card{
-      min-height:330px;
+      min-height:430px;
       border-radius:var(--radius);
       padding:36px;
       position:relative;
       overflow:hidden;
       border:1px solid rgba(46,50,47,.08);
-      background:rgba(255,255,255,.62);
+      background:rgba(255,255,255,.72);
+      isolation:isolate;
     }
-    .demo-card.large{grid-column:span 2;min-height:370px}
+    .demo-card.large{grid-column:span 2;min-height:420px}
+    .demo-card-copy{position:relative;z-index:3;max-width:52%}
+    .demo-card.large .demo-card-copy{max-width:47%}
     .demo-card h3{
       font-family:"Italiana",serif;
-      font-size:2.6rem;
+      font-size:2.8rem;
       font-weight:400;
-      margin:6px 0 14px;
+      margin:8px 0 14px;
     }
-    .demo-card p{max-width:500px;color:var(--muted)}
-    .demo-visual{
-      position:absolute;right:-18px;bottom:-44px;
-      width:230px;height:330px;border-radius:34px;
-      background:linear-gradient(145deg,#f4ded9,#e8eee3);
-      border:10px solid #252826;
-      transform:rotate(7deg);
-      box-shadow:0 20px 50px rgba(0,0,0,.15);
-    }
+    .demo-card p{max-width:500px;color:var(--muted);line-height:1.65}
+    .demo-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
     .coming{
       display:inline-block;padding:7px 10px;border-radius:999px;
       background:rgba(46,50,47,.08);
       font-size:.68rem;letter-spacing:.08em;font-weight:600;text-transform:uppercase;
+    }
+    .coming.available{background:var(--sage-soft);color:var(--sage-dark)}
+    .coming.dev{background:var(--rose-soft);color:var(--rose-dark)}
+
+    .demo-device{
+      position:absolute;
+      right:28px;
+      bottom:-42px;
+      width:245px;
+      height:360px;
+      border-radius:36px;
+      border:10px solid #252826;
+      background:#252826;
+      transform:rotate(6deg);
+      box-shadow:0 24px 60px rgba(0,0,0,.18);
+      overflow:hidden;
+      z-index:1;
+    }
+    .demo-device.large{
+      width:280px;
+      height:390px;
+      right:70px;
+      transform:rotate(4deg);
+    }
+    .demo-screen{
+      width:100%;
+      height:100%;
+      background:#f8f2ec;
+      border-radius:25px;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .essence-mini{
+      height:100%;
+      background:
+        linear-gradient(180deg,rgba(30,26,23,.08),rgba(30,26,23,.55)),
+        radial-gradient(circle at 70% 20%,rgba(207,152,142,.42),transparent 25%),
+        linear-gradient(145deg,#c7b5aa,#8b7c73);
+      color:#fff;
+      padding:22px 18px;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+    }
+    .essence-mini .mini-kicker{
+      font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;opacity:.86
+    }
+    .essence-mini .mini-title{
+      font-family:"Italiana",serif;
+      font-size:2.15rem;
+      line-height:.88;
+      margin:8px 0 10px;
+    }
+    .essence-mini .mini-line{
+      width:54px;height:1px;background:rgba(255,255,255,.7);margin:8px 0 10px;
+    }
+    .essence-mini .mini-pill{
+      display:inline-block;width:max-content;
+      border:1px solid rgba(255,255,255,.55);
+      border-radius:999px;padding:6px 9px;
+      font-size:.55rem;
+    }
+
+    .signature-mini{
+      height:100%;
+      background:linear-gradient(155deg,#f0dcda,#e6ddef 58%,#dce6dc);
+      color:var(--ink);
+      padding:20px;
+      position:relative;
+    }
+    .signature-mini:before,
+    .signature-mini:after{
+      content:"";position:absolute;border-radius:50%;border:1px solid rgba(46,50,47,.12)
+    }
+    .signature-mini:before{width:150px;height:150px;right:-72px;top:-58px}
+    .signature-mini:after{width:105px;height:105px;left:-56px;bottom:-44px}
+    .signature-mini .mini-badge{
+      font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sage-dark)
+    }
+    .signature-mini .mini-name{
+      font-family:"Italiana",serif;font-size:1.65rem;margin-top:70px
+    }
+    .signature-mini .mini-guest{
+      margin-top:14px;font-size:.7rem;line-height:1.35;color:#5f5955
+    }
+    .signature-mini .mini-stat{
+      margin-top:18px;background:rgba(255,255,255,.72);border-radius:14px;
+      padding:11px;font-size:.62rem
+    }
+
+    .atelier-scene{
+      position:absolute;right:55px;bottom:24px;width:430px;height:320px;z-index:1;
+    }
+    .atelier-card{
+      position:absolute;border-radius:26px;border:1px solid rgba(46,50,47,.08);
+      box-shadow:0 18px 45px rgba(60,45,38,.10);overflow:hidden
+    }
+    .atelier-card.one{
+      width:230px;height:300px;right:125px;bottom:0;
+      background:linear-gradient(155deg,#d8e0e6,#eef2ee);
+      transform:rotate(-7deg)
+    }
+    .atelier-card.two{
+      width:205px;height:270px;right:0;bottom:18px;
+      background:linear-gradient(155deg,#efd9d4,#f6ebe6);
+      transform:rotate(8deg)
+    }
+    .atelier-card.three{
+      width:185px;height:240px;left:0;bottom:28px;
+      background:linear-gradient(155deg,#dde6d9,#f3efe7);
+      transform:rotate(-2deg)
+    }
+    .atelier-card:after{
+      content:"";position:absolute;inset:22px;border:1px solid rgba(46,50,47,.10);border-radius:18px
+    }
+    .atelier-mark{
+      position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+      font-family:"Italiana",serif;font-size:3.2rem;color:rgba(46,50,47,.72)
     }
 
     .faq-grid{display:grid;grid-template-columns:.7fr 1.3fr;gap:60px}
@@ -678,8 +793,11 @@
       .experience-grid .experience-card:last-child,.plans-grid .plan:last-child{grid-column:auto}
       .step{border-right:none}
       .plan{padding:26px}
-      .demo-card,.demo-card.large{min-height:340px;padding:28px}
-      .demo-visual{opacity:.42;right:-75px}
+      .demo-card,.demo-card.large{min-height:430px;padding:28px}
+      .demo-card-copy,.demo-card.large .demo-card-copy{max-width:100%}
+      .demo-device{opacity:.30;right:-58px;bottom:-52px}
+      .demo-device.large{right:-48px}
+      .atelier-scene{opacity:.30;right:-110px}
       .cta-box{padding:54px 22px}
       .footer-grid{align-items:flex-start;flex-direction:column}
     }
@@ -713,7 +831,7 @@
         <a href="#preguntas">Preguntas</a>
       </div>
 
-      <a href="#contacto" class="btn btn-primary">Crear mi invitación</a>
+      <a href="crear/" class="btn btn-primary">Crear mi invitación</a>
     </div>
   </nav>
 
@@ -1031,32 +1149,64 @@
       <div class="wrap">
         <div class="section-head reveal">
           <div class="eyebrow">Demos</div>
-          <h2>No queremos que imagines CELEA. Queremos que la pruebes.</h2>
-          <p>Muy pronto podrás abrir cada experiencia y recorrerla como si fueras uno de los invitados.</p>
+          <h2>Conoce cómo puede sentirse tu invitación.</h2>
+          <p>Essence ya tiene su primera colección disponible. Signature está en desarrollo y Atelier se construye alrededor de cada historia.</p>
         </div>
 
         <div class="demo-grid">
           <article class="demo-card reveal">
-            <span class="coming">Próximamente</span>
-            <h3>Essence</h3>
-            <p>Una invitación de colección, elegante, completa y lista para compartir.</p>
-            <div class="demo-visual"></div>
+            <div class="demo-card-copy">
+              <span class="coming available">Disponible</span>
+              <h3>Essence</h3>
+              <p>Diseños de colección con apertura, fotografías, cuenta regresiva, ubicaciones, regalos y RSVP. Elegantes, completas y listas para compartir.</p>
+              <div class="demo-actions">
+                <a href="#planes" class="btn btn-soft">Ver Essence</a>
+                <a href="crear/" class="btn btn-primary">Crear mi invitación</a>
+              </div>
+            </div>
+            <div class="demo-device" aria-hidden="true">
+              <div class="demo-screen essence-mini">
+                <div class="mini-kicker">Una invitación especial</div>
+                <div class="mini-title">Carolina<br>& Alexander</div>
+                <div class="mini-line"></div>
+                <div class="mini-pill">Abrir invitación</div>
+              </div>
+            </div>
           </article>
 
           <article class="demo-card reveal">
-            <span class="coming">Próximamente</span>
-            <h3>Signature</h3>
-            <p>Prueba cómo una invitación puede reconocer el nombre, cupos y confirmación de cada invitado.</p>
-            <div class="demo-visual" style="background:linear-gradient(145deg,#f4ded9,#e6d9ee)"></div>
+            <div class="demo-card-copy">
+              <span class="coming dev">En desarrollo</span>
+              <h3>Signature</h3>
+              <p>Una experiencia más personalizada, con recursos visuales y composiciones adaptadas al evento, manteniendo reconocimiento de invitados, cupos y RSVP.</p>
+              <div class="demo-actions">
+                <a href="#planes" class="btn btn-soft">Conocer Signature</a>
+              </div>
+            </div>
+            <div class="demo-device" aria-hidden="true">
+              <div class="demo-screen signature-mini">
+                <div class="mini-badge">Signature · RSVP inteligente</div>
+                <div class="mini-name">Bienvenido, Nicolas</div>
+                <div class="mini-guest">Tu invitación reconoce tu nombre, tus cupos y tu respuesta.</div>
+                <div class="mini-stat">1 cupo reservado · Pendiente de confirmación</div>
+              </div>
+            </div>
           </article>
 
           <article class="demo-card large reveal">
-            <span class="coming">Proyecto personalizado</span>
-            <h3>Atelier</h3>
-            <p>
-              Cada Atelier nace de una historia distinta. Dirección creativa, diseño exclusivo, animaciones y funciones creadas alrededor del evento.
-            </p>
-            <div class="demo-visual" style="width:280px;background:linear-gradient(145deg,#e7edf2,#e8eee3)"></div>
+            <div class="demo-card-copy">
+              <span class="coming">Proyecto personalizado</span>
+              <h3>Atelier</h3>
+              <p>Cada Atelier nace de una historia distinta. Dirección creativa, diseño exclusivo, animaciones y funciones creadas alrededor del evento.</p>
+              <div class="demo-actions">
+                <a href="#contacto" class="btn btn-primary">Cotizar Atelier</a>
+              </div>
+            </div>
+            <div class="atelier-scene" aria-hidden="true">
+              <div class="atelier-card one"><span class="atelier-mark">A</span></div>
+              <div class="atelier-card two"><span class="atelier-mark">C</span></div>
+              <div class="atelier-card three"><span class="atelier-mark">∞</span></div>
+            </div>
           </article>
         </div>
       </div>
