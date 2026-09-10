@@ -1282,6 +1282,212 @@ body.dark-mode .celea-theme-toggle{
 }
 </style>
 
+
+<style id="celea-dark-mode-contrast-fix">
+/* Ajustes específicos de contraste para CELEA en modo oscuro */
+body.dark-mode{
+  --paper:#171916;
+  --paper-2:#1d201c;
+  --ink:#f3eee7;
+  --muted:#c9c1b8;
+  --line:rgba(243,238,231,.13);
+  --sage-dark:#b5c2ae;
+  --rose-dark:#e0aaa0;
+}
+
+/* Navegación */
+body.dark-mode .nav-links a{
+  color:#cfc7be !important;
+}
+body.dark-mode .nav-links a:hover{
+  color:#ffffff !important;
+}
+
+/* Experiencia */
+body.dark-mode .experience-card{
+  background:#232620 !important;
+  border-color:rgba(243,238,231,.12) !important;
+}
+body.dark-mode .experience-card h3{
+  color:#f6f1eb !important;
+}
+body.dark-mode .experience-card p{
+  color:#cfc7be !important;
+}
+body.dark-mode .experience-card .icon-circle{
+  background:#dfe8dc !important;
+  color:#52604f !important;
+}
+body.dark-mode .experience-card:nth-child(2) .icon-circle{
+  background:#f1d9d4 !important;
+  color:#a86f66 !important;
+}
+body.dark-mode .experience-card:nth-child(3) .icon-circle{
+  background:#dce6ee !important;
+  color:#60788c !important;
+}
+
+/* Cómo funciona */
+body.dark-mode .steps{
+  background:#171916 !important;
+  border-color:rgba(243,238,231,.12) !important;
+}
+body.dark-mode .step{
+  border-color:rgba(243,238,231,.10) !important;
+}
+body.dark-mode .step h3{
+  color:#f6f1eb !important;
+}
+body.dark-mode .step p{
+  color:#d0c8bf !important;
+}
+body.dark-mode .step-num{
+  color:#e0aaa0 !important;
+}
+
+/* Planes */
+body.dark-mode .plan{
+  background:#232620 !important;
+  border-color:rgba(243,238,231,.12) !important;
+}
+body.dark-mode .plan.signature{
+  background:#27221f !important;
+  border-color:rgba(224,170,160,.45) !important;
+}
+body.dark-mode .plan.atelier{
+  background:linear-gradient(180deg,#20272c,#1d211f) !important;
+  border-color:rgba(158,178,194,.35) !important;
+}
+body.dark-mode .plan-name,
+body.dark-mode .price,
+body.dark-mode .plan h3{
+  color:#f8f2eb !important;
+}
+body.dark-mode .price small,
+body.dark-mode .plan-tagline,
+body.dark-mode .plan li{
+  color:#d1c9c0 !important;
+}
+body.dark-mode .plan li{
+  border-color:rgba(243,238,231,.09) !important;
+}
+body.dark-mode .badge{
+  color:white !important;
+}
+
+/* Tabla comparativa */
+body.dark-mode .compare{
+  background:#20231f !important;
+  border-color:rgba(243,238,231,.12) !important;
+}
+body.dark-mode .compare table{
+  color:#eee8e1 !important;
+}
+body.dark-mode .compare th,
+body.dark-mode .compare td{
+  border-color:rgba(243,238,231,.10) !important;
+  color:#e8e1d9 !important;
+  background:#20231f !important;
+}
+body.dark-mode .compare thead th{
+  color:#f5efe8 !important;
+}
+body.dark-mode .compare thead th:first-child{
+  background:#272923 !important;
+}
+body.dark-mode .compare thead th:nth-child(2){
+  background:#263027 !important;
+}
+body.dark-mode .compare thead th:nth-child(3){
+  background:#302622 !important;
+}
+body.dark-mode .compare thead th:nth-child(4){
+  background:#242c32 !important;
+}
+body.dark-mode .compare .yes{
+  color:#c9d7c3 !important;
+}
+body.dark-mode .compare .no{
+  color:#8f8b85 !important;
+}
+body.dark-mode .table-note{
+  color:#c9c1b8 !important;
+}
+
+/* Demos */
+body.dark-mode .demo{
+  background:
+    radial-gradient(circle at 10% 20%,rgba(140,153,131,.10),transparent 24%),
+    radial-gradient(circle at 90% 80%,rgba(207,152,142,.10),transparent 24%),
+    #191b18 !important;
+}
+body.dark-mode .demo-card{
+  background:#222520 !important;
+  border-color:rgba(243,238,231,.10) !important;
+}
+body.dark-mode .demo-card h3{
+  color:#f5efe8 !important;
+}
+body.dark-mode .demo-card p{
+  color:#cfc7be !important;
+}
+
+/* Preguntas */
+body.dark-mode details,
+body.dark-mode .faq-list{
+  border-color:rgba(243,238,231,.12) !important;
+}
+body.dark-mode summary{
+  color:#f2ece5 !important;
+}
+body.dark-mode details p{
+  color:#c9c1b8 !important;
+}
+
+/* CTA final: este era el bloque casi invisible */
+body.dark-mode .cta{
+  background:#171916 !important;
+}
+body.dark-mode .cta-box{
+  background:
+    radial-gradient(circle at 18% 18%,rgba(167,179,160,.13),transparent 34%),
+    radial-gradient(circle at 82% 75%,rgba(217,164,154,.13),transparent 32%),
+    #20231f !important;
+  border-color:rgba(243,238,231,.14) !important;
+}
+body.dark-mode .cta-box h2{
+  color:#f5efe8 !important;
+}
+body.dark-mode .cta-box p{
+  color:#cec6bd !important;
+}
+body.dark-mode .cta-box .eyebrow{
+  color:#d8afa7 !important;
+}
+
+/* Footer */
+body.dark-mode footer,
+body.dark-mode .footer-grid{
+  border-color:rgba(243,238,231,.12) !important;
+}
+body.dark-mode .footer-links,
+body.dark-mode .copyright{
+  color:#aaa39b !important;
+}
+
+/* El teléfono conserva su diseño claro, solo lo atenuamos suavemente */
+body.dark-mode .phone,
+body.dark-mode .phone-screen,
+body.dark-mode .demo-screen{
+  filter:none !important;
+}
+
+/* Evita textos lavados heredados de fondos claros */
+body.dark-mode [style*="color:var(--muted)"]{
+  color:#c9c1b8 !important;
+}
+</style>
+
 </head>
 
 <body>
