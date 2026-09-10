@@ -1198,7 +1198,7 @@
         <a href="#preguntas">Preguntas</a>
       </div>
 
-      <a href="crear/" class="btn btn-primary">Crear mi invitación</a>
+      <a  class="btn btn-primary" href="https://wa.me/593981650320?text=Hola%20CELEA%2C%20quiero%20crear%20mi%20invitaci%C3%B3n%20%E2%9C%A8" target="_blank" rel="noopener">Crear mi invitación</a>
     </div>
   </nav>
 
@@ -1528,7 +1528,7 @@
               <p>Diseños de colección con apertura, fotografías, cuenta regresiva, ubicaciones, regalos y RSVP. Elegantes, completas y listas para compartir.</p>
               <div class="demo-actions">
                 <a href="#planes" class="btn btn-soft">Ver Essence</a>
-                <a href="crear/" class="btn btn-primary">Crear mi invitación</a>
+                <a  class="btn btn-primary" href="https://wa.me/593981650320?text=Hola%20CELEA%2C%20quiero%20crear%20mi%20invitaci%C3%B3n%20%E2%9C%A8" target="_blank" rel="noopener">Crear mi invitación</a>
               </div>
             </div>
             <div class="demo-device" aria-hidden="true">
@@ -1628,8 +1628,8 @@
           <div class="eyebrow">Tu celebración empieza aquí</div>
           <h2>Tu historia merece una invitación que también se sienta especial.</h2>
           <p>Cuéntanos qué estás preparando y te ayudaremos a elegir la experiencia CELEA ideal para tu evento.</p>
-          <a class="btn btn-primary" href="#contacto">Quiero crear mi invitación</a>
-          <p style="font-size:.75rem;margin-top:16px">Este botón quedará conectado al formulario oficial de CELEA en la siguiente etapa.</p>
+          <a class="btn btn-primary"  href="https://wa.me/593981650320?text=Hola%20CELEA%2C%20quiero%20crear%20mi%20invitaci%C3%B3n%20%E2%9C%A8" target="_blank" rel="noopener">Quiero crear mi invitación</a>
+          
         </div>
       </div>
     </section>
@@ -1754,7 +1754,7 @@
      Formato internacional, sin +, espacios ni guiones.
      Ejemplo Ecuador: 593991234567
   */
-  const CELEA_WHATSAPP = "593999999999";
+  const CELEA_WHATSAPP = "593981650320";
 
   const whatsappMessage =
     "Hola CELEA ✨ Vi sus invitaciones digitales y quisiera información para mi evento.";
@@ -1844,6 +1844,28 @@
     });
   });
 })();
+</script>
+
+
+<script id="celea-whatsapp-cta-fix">
+document.addEventListener("DOMContentLoaded", function() {
+  const whatsappURL = "https://wa.me/593981650320?text=Hola%20CELEA%2C%20quiero%20crear%20mi%20invitaci%C3%B3n%20%E2%9C%A8";
+  document.querySelectorAll("a, button").forEach(function(el) {
+    const text = (el.textContent || "").trim().toLowerCase();
+    if (text === "crear mi invitación" || text === "quiero crear mi invitación") {
+      if (el.tagName === "A") {
+        el.href = whatsappURL;
+        el.target = "_blank";
+        el.rel = "noopener";
+      } else {
+        el.addEventListener("click", function(e) {
+          e.preventDefault();
+          window.open(whatsappURL, "_blank", "noopener");
+        });
+      }
+    }
+  });
+});
 </script>
 
 </body>
