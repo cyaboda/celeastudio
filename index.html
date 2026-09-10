@@ -1488,6 +1488,79 @@ body.dark-mode [style*="color:var(--muted)"]{
 }
 </style>
 
+
+<style id="celea-dark-phone-fix">
+/* Teléfono CELEA adaptado correctamente al modo oscuro */
+body.dark-mode .phone{
+  background:#090b09 !important;
+  box-shadow:0 34px 90px rgba(0,0,0,.48) !important;
+}
+body.dark-mode .phone-screen{
+  background:
+    radial-gradient(circle at 16% 18%,rgba(207,152,142,.09),transparent 22%),
+    radial-gradient(circle at 88% 16%,rgba(140,153,131,.11),transparent 22%),
+    #1f221e !important;
+  color:#eee8e1 !important;
+}
+body.dark-mode .phone-screen .tiny,
+body.dark-mode .phone-screen .date-chip,
+body.dark-mode .phone-screen .mini-card,
+body.dark-mode .phone-screen .mini-dress div,
+body.dark-mode .phone-screen .mini-rsvp{
+  color:#d9d1c8 !important;
+}
+body.dark-mode .phone-screen h3,
+body.dark-mode .phone-screen .mini-section-title,
+body.dark-mode .phone-screen .mini-dress b{
+  color:#b8c5b1 !important;
+}
+body.dark-mode .phone-screen .amp{
+  color:#dba49a !important;
+}
+body.dark-mode .phone-screen .date-chip{
+  border-color:rgba(238,232,225,.16) !important;
+}
+body.dark-mode .phone-screen .count-grid div,
+body.dark-mode .phone-screen .mini-card,
+body.dark-mode .phone-screen .mini-dress div,
+body.dark-mode .phone-screen .mini-gift{
+  background:#292d28 !important;
+  border-color:rgba(238,232,225,.09) !important;
+}
+body.dark-mode .phone-screen .count-grid b{
+  color:#f2ece5 !important;
+}
+body.dark-mode .phone-screen .count-grid span,
+body.dark-mode .phone-screen .mini-section-sub,
+body.dark-mode .phone-screen .mini-gift,
+body.dark-mode .phone-screen .mini-rsvp span{
+  color:#b9b0a7 !important;
+}
+body.dark-mode .phone-screen .mini-map{
+  background:
+    linear-gradient(135deg,rgba(140,153,131,.15),rgba(207,152,142,.09)),
+    repeating-linear-gradient(35deg,transparent 0 14px,rgba(255,255,255,.025) 15px 16px) !important;
+  border-color:rgba(238,232,225,.09) !important;
+  color:#b8c5b1 !important;
+}
+body.dark-mode .phone-screen .mini-rsvp{
+  background:linear-gradient(145deg,rgba(207,152,142,.13),rgba(140,153,131,.12)) !important;
+  border-color:rgba(219,164,154,.16) !important;
+}
+body.dark-mode .phone-screen .mini-rsvp strong{
+  color:#f2ece5 !important;
+}
+body.dark-mode .phone-screen .mini-rsvp-button,
+body.dark-mode .phone-screen .mini-cta{
+  background:#d39d93 !important;
+  color:#fff !important;
+}
+body.dark-mode .blob{
+  opacity:.38 !important;
+  filter:saturate(.8) brightness(.75);
+}
+</style>
+
 </head>
 
 <body>
@@ -2224,6 +2297,38 @@ document.addEventListener("DOMContentLoaded", function() {
         localStorage.setItem(KEY,next);
         applyTheme(next);
       });
+    }
+  });
+})();
+</script>
+
+
+<script id="celea-scroll-top-on-refresh">
+(function(){
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
+
+  function goTop(){
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }
+
+  window.addEventListener("beforeunload", function(){
+    window.scrollTo(0, 0);
+  });
+
+  window.addEventListener("load", function(){
+    if (!location.hash) {
+      goTop();
+      setTimeout(goTop, 30);
+      setTimeout(goTop, 120);
+    }
+  });
+
+  window.addEventListener("pageshow", function(event){
+    if (!location.hash && event.persisted) {
+      goTop();
+      setTimeout(goTop, 30);
     }
   });
 })();
