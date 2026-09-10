@@ -1043,6 +1043,131 @@
 }
 </style>
 
+
+<style id="celea-hero-first-screen-fix">
+/* CELEA · HERO COMPLETO EN LA PRIMERA PANTALLA */
+@media (min-width: 981px) and (min-height: 650px){
+  .hero{
+    height:calc(100vh - 78px);
+    min-height:0;
+    padding:26px 0 30px;
+    overflow:hidden;
+  }
+
+  .hero-grid{
+    height:100%;
+    gap:58px;
+  }
+
+  .hero h1{
+    font-size:clamp(3.6rem,6.2vw,6.25rem);
+    margin:8px 0 4px;
+  }
+
+  .hero-studio{
+    font-size:clamp(1.2rem,2.2vw,1.85rem);
+    margin-bottom:14px;
+  }
+
+  .hero-script{
+    font-size:clamp(1.55rem,2.25vw,2.15rem);
+    margin:8px 0 12px;
+  }
+
+  .hero-divider{
+    margin:12px 0 16px;
+  }
+
+  .hero-copy{
+    font-size:.96rem;
+    line-height:1.55;
+    margin-bottom:18px;
+  }
+
+  .hero-benefits{
+    margin:16px 0 18px;
+  }
+
+  .hero-benefit{
+    padding-top:13px;
+    padding-bottom:13px;
+    min-height:86px;
+  }
+
+  .hero-signature{
+    margin-top:16px;
+  }
+
+  .phone-stage{
+    min-height:0;
+    height:100%;
+  }
+
+  .phone{
+    transform:scale(.88) rotate(3deg);
+    transform-origin:center center;
+  }
+}
+
+/* En portátiles de poca altura comprimimos un poco más */
+@media (min-width: 981px) and (max-height: 760px){
+  .hero{
+    padding:18px 0 22px;
+  }
+
+  .hero h1{
+    font-size:4.5rem;
+  }
+
+  .hero-studio{
+    font-size:1.35rem;
+    margin-bottom:9px;
+  }
+
+  .hero-script{
+    font-size:1.65rem;
+    margin:5px 0 8px;
+  }
+
+  .hero-divider{
+    margin:9px 0 12px;
+  }
+
+  .hero-copy{
+    font-size:.88rem;
+    line-height:1.45;
+    margin-bottom:11px;
+  }
+
+  .hero-benefits{
+    margin:10px 0 12px;
+  }
+
+  .hero-benefit{
+    min-height:70px;
+    padding-top:9px;
+    padding-bottom:9px;
+  }
+
+  .hero-benefit p{
+    font-size:.72rem;
+  }
+
+  .hero-actions .btn{
+    padding:11px 18px;
+  }
+
+  .hero-signature{
+    margin-top:10px;
+    font-size:.72rem;
+  }
+
+  .phone{
+    transform:scale(.76) rotate(3deg);
+  }
+}
+</style>
+
 </head>
 
 <body>
@@ -1628,7 +1753,7 @@
      Formato internacional, sin +, espacios ni guiones.
      Ejemplo Ecuador: 593991234567
   */
-  const CELEA_WHATSAPP = "593981650320";
+  const CELEA_WHATSAPP = "593999999999";
 
   const whatsappMessage =
     "Hola CELEA ✨ Vi sus invitaciones digitales y quisiera información para mi evento.";
